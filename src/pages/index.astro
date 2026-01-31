@@ -1,11 +1,16 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import FlashcardApp from '../components/FlashcardApp';
 ---
 
 <Layout>
-	<Welcome />
+	<main class="min-h-screen bg-gray-950 text-white selection:bg-purple-500 selection:text-white">
+		<div class="fixed inset-0 z-0 opacity-20 pointer-events-none">
+			<div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+		</div>
+		
+		<div class="relative z-10 pt-10">
+			<FlashcardApp client:load />
+		</div>
+	</main>
 </Layout>

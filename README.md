@@ -1,46 +1,35 @@
-# Astro Starter Kit: Basics
+# 10xCards - Inteligentny Generator Fiszek
 
-```sh
-npm create astro@latest -- --template basics
+## Opis
+Aplikacja Proof of Concept (PoC) generująca fiszki edukacyjne z dowolnego tekstu przy użyciu AI (Claude 3.5 Sonnet via OpenRouter).
+
+## Funkcjonalności
+- Generator fiszek z tekstu (limit 5000 znaków).
+- Wybór dziedziny wiedzy.
+- Podgląd wygenerowanych pytań i odpowiedzi.
+- Estetyczny, nowoczesny interfejs (Dark Mode).
+
+## Wymagania
+- Node.js (v18+)
+- Klucz API OpenRouter (z dostępem do modelu `anthropic/claude-3.5-sonnet` lub darmowych modeli)
+
+## Instalacja
+1. Zainstaluj zależności:
+   ```bash
+   npm install
+   ```
+
+## Konfiguracja
+1. Zmień nazwę pliku `.env.example` na `.env` (jeśli istnieje) lub utwórz nowy.
+2. Ustaw klucz API:
+   ```bash
+   OPENROUTER_API_KEY=twoj_klucz_api
+   ```
+
+## Uruchomienie
+W trybie deweloperskim:
+```bash
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
-
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Aplikacja będzie dostępna pod adresem: http://localhost:4321
