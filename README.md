@@ -43,6 +43,7 @@ FlashCardsMemory is a web application for creating and learning with educational
 
 **Tooling**
 - ESLint
+- Prettier
 
 ## Getting started locally
 **Prerequisites**
@@ -68,6 +69,8 @@ From `package.json`:
 - `npm run preview` - preview production build
 - `npm run astro` - run Astro CLI commands
 - `npm run lint` - run ESLint to check for linting issues
+- `npm run format` - format files with Prettier
+- `npm run format:check` - check formatting with Prettier
 
 ## Project scope
 **In MVP**
