@@ -58,7 +58,7 @@ export default function FlashcardApp() {
             {/* Input Section */}
             <div className="bg-gray-900 border border-gray-700 rounded-2xl p-8 shadow-2xl">
                 <h2 className="text-3xl font-bold text-white mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                    Generator Fiszek AI
+                    FlashCardsMemory
                 </h2>
 
                 <div className="space-y-4">

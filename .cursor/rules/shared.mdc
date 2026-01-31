@@ -3,9 +3,9 @@ description:
 globs: 
 alwaysApply: true
 ---
-# AI Rules for {app-name}
+# AI Rules for FlashCardMemory
 
-{project-description}
+It's very simple app to using flashcards. The app should help everyone who need quickly revision and remember the most important knowledgeless. 
 
 ## Tech Stack
 

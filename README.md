@@ -1,35 +1,101 @@
-# 10xCards - Inteligentny Generator Fiszek
+# FlashCardsMemory
 
-## Opis
-Aplikacja Proof of Concept (PoC) generująca fiszki edukacyjne z dowolnego tekstu przy użyciu AI (Claude 3.5 Sonnet via OpenRouter).
+[![status](https://img.shields.io/badge/status-MVP%20in%20progress-blue)](#project-status)
+[![node](https://img.shields.io/badge/node-22.17.1-339933)](#getting-started-locally)
+[![license](https://img.shields.io/badge/license-not%20specified-lightgrey)](#license)
 
-## Funkcjonalności
-- Generator fiszek z tekstu (limit 5000 znaków).
-- Wybór dziedziny wiedzy.
-- Podgląd wygenerowanych pytań i odpowiedzi.
-- Estetyczny, nowoczesny interfejs (Dark Mode).
+## Table of contents
+- [Project name](#project-name)
+- [Project description](#project-description)
+- [Tech stack](#tech-stack)
+- [Getting started locally](#getting-started-locally)
+- [Available scripts](#available-scripts)
+- [Project scope](#project-scope)
+- [Project status](#project-status)
+- [License](#license)
 
-## Wymagania
-- Node.js (v18+)
-- Klucz API OpenRouter (z dostępem do modelu `anthropic/claude-3.5-sonnet` lub darmowych modeli)
+## Project name
+FlashCardsMemory
 
-## Instalacja
-1. Zainstaluj zależności:
-   ```bash
-   npm install
-   ```
+## Project description
+FlashCardsMemory is a web application for creating and learning with educational flashcards. It uses AI to generate high-quality flashcards from source text and applies the FSRS (Free Spaced Repetition Scheduler) algorithm to optimize review scheduling. The workflow focuses on fast input, preview and editing, and efficient spaced repetition study sessions.
 
-## Konfiguracja
-1. Zmień nazwę pliku `.env.example` na `.env` (jeśli istnieje) lub utwórz nowy.
-2. Ustaw klucz API:
-   ```bash
-   OPENROUTER_API_KEY=twoj_klucz_api
-   ```
+## Tech stack
+**Frontend**
+- Astro 5
+- React 19
+- TypeScript 5
+- Tailwind CSS 4
+- shadcn/ui
 
-## Uruchomienie
-W trybie deweloperskim:
+**Backend**
+- Supabase (PostgreSQL database, Auth, SDK)
+
+**AI**
+- OpenRouter.ai for model access (target model: GPT-5.2, per PRD)
+
+**Analytics**
+- PostHog
+
+**CI/CD & hosting**
+- GitHub Actions
+- DigitalOcean (Docker-based hosting)
+
+**Tooling**
+- ESLint
+
+## Getting started locally
+**Prerequisites**
+- Node.js `22.17.1` 
+- npm (recommended with the Node.js install)
+
+**Install dependencies**
+```bash
+npm install
+```
+
+**Run the app in development**
 ```bash
 npm run dev
 ```
 
-Aplikacja będzie dostępna pod adresem: http://localhost:4321
+Astro will start the dev server (default: `http://localhost:4321`).
+
+## Available scripts
+From `package.json`:
+- `npm run dev` - start Astro dev server
+- `npm run build` - build for production
+- `npm run preview` - preview production build
+- `npm run astro` - run Astro CLI commands
+- `npm run lint` - run ESLint to check for linting issues
+
+## Project scope
+**In MVP**
+- AI flashcard generation from pasted text (up to 5000 characters)
+- Domain selection to improve AI output quality
+- Preview, edit, delete, and manually add flashcards before saving
+- Manual flashcard creation and basic Markdown formatting
+- Deck management (create, edit, delete, list)
+- Study sessions with a 4-grade scale and FSRS scheduling
+- User accounts and authentication
+- Basic analytics on AI quality and usage
+- Responsive web UI
+
+**Out of scope for MVP**
+- Advanced/custom repetition algorithm beyond FSRS
+- Importing files (PDF/DOCX/EPUB)
+- Sharing decks between users
+- Native mobile apps
+- Data export (CSV)
+- Browser push notifications
+- Public deck library
+- Offline mode
+- Gamification (points, badges, streaks)
+- Advanced editor with images/audio
+- Public API for integrations
+
+## Project status
+MVP in progress. The PRD defines the full functional scope, user stories, and success metrics.
+
+## License
+Not specified. If you plan to open-source this project, add a `LICENSE` file and update this section.
