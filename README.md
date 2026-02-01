@@ -1,6 +1,6 @@
 # FlashCardsMemory with AI
 
-[![status](https://img.shields.io/badge/status-MVP%20in%20progress-blue)](#project-status)
+[![status](https://img.shields.io/badge/status-MVP-blue)](#project-status)
 [![node](https://img.shields.io/badge/node-22.17.1-339933)](#getting-started-locally)
 [![license](https://img.shields.io/badge/license-not%20specified-lightgrey)](#license)
 
@@ -162,7 +162,7 @@ For more details, see [TESTING.md](./TESTING.md)
 - Public API for integrations
 
 ## Project status
-MVP in progress. The PRD defines the full functional scope, user stories, and success metrics.
+MVP. The PRD defines the full functional scope, user stories, and success metrics.
 
 ## License
 Not specified. If you plan to open-source this project, add a `LICENSE` file and update this section.

@@ -21,8 +21,8 @@ BEGIN
 
   -- If user doesn't exist, create it
   IF test_user_id IS NULL THEN
-    -- Generate a new UUID for the test user
-    test_user_id := gen_random_uuid();
+    -- Use a fixed UUID for test user (for consistent testing)
+    test_user_id := '8db7f0bc-a0a3-4cb9-9a6c-ea874aaf85bc'::uuid;
 
     -- Insert into auth.users
     INSERT INTO auth.users (
