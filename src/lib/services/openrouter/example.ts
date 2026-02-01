@@ -130,11 +130,11 @@ async function errorHandlingExample() {
       
       // Check specific error types
       if ('code' in error) {
-        console.error('Error code:', (error as any).code);
+        console.error('Error code:', (error as { code: string }).code);
       }
       
       if ('retryAfter' in error) {
-        console.error('Retry after:', (error as any).retryAfter, 'seconds');
+        console.error('Retry after:', (error as { retryAfter: number }).retryAfter, 'seconds');
       }
     }
   }

@@ -20,7 +20,6 @@ export interface FSRSResult extends FSRSParameters {
  */
 const DEFAULT_STABILITY = 1.0;
 const DEFAULT_DIFFICULTY = 5.0;
-const DEFAULT_RETRIEVABILITY = 0.9;
 
 /**
  * Calculates the next review parameters based on the rating.
@@ -29,14 +28,12 @@ const DEFAULT_RETRIEVABILITY = 0.9;
  * @param rating - User rating (1=Again, 2=Hard, 3=Good, 4=Easy)
  * @param currentStability - Current stability value (or null for new cards)
  * @param currentDifficulty - Current difficulty value (or null for new cards)
- * @param lastReviewedAt - Last review date (or null for new cards)
  * @returns New FSRS parameters and next due date
  */
 export function calculateNextReview(
   rating: FSRSRating,
   currentStability: number | null,
-  currentDifficulty: number | null,
-  lastReviewedAt: Date | null
+  currentDifficulty: number | null
 ): FSRSResult {
   const now = new Date();
 

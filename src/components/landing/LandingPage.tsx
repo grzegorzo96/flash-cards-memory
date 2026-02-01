@@ -13,7 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { LanguageCode } from '@/types';
 
 const DOMAIN_SUGGESTIONS = [
   'Programowanie',
@@ -100,7 +99,7 @@ export default function LandingPage() {
 
         const result = await response.json();
         window.location.href = `/generate/progress?requestId=${result.id}`;
-      } catch (error) {
+      } catch {
         setSubmitError('Wystąpił błąd. Spróbuj ponownie.');
         setIsSubmitting(false);
       }

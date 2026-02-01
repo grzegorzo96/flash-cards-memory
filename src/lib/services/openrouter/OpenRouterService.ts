@@ -7,7 +7,6 @@ import type {
   OpenRouterPayload,
   OpenRouterResponse,
   JsonSchema,
-  Logger,
   JsonSchemaValidator,
 } from './types';
 import {

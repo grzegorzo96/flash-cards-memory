@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import type { FlashcardSortField, ApiSortOrder } from "@/types";
 import { useDeck } from "@/components/hooks/useDeck";
 import { useDeckFlashcards } from "@/components/hooks/useDeckFlashcards";

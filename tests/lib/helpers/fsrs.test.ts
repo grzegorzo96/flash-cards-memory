@@ -263,7 +263,6 @@ describe('FSRS - Free Spaced Repetition Scheduler', () => {
 
       it('should sort overdue cards by how overdue they are', () => {
         // Arrange
-        const now = new Date('2024-01-15T12:00:00.000Z');
         const cards = [
           createMockCard('1', '2024-01-14T12:00:00.000Z', '2024-01-10T12:00:00.000Z'), // 1 day overdue
           createMockCard('2', '2024-01-10T12:00:00.000Z', '2024-01-05T12:00:00.000Z'), // 5 days overdue
@@ -281,7 +280,6 @@ describe('FSRS - Free Spaced Repetition Scheduler', () => {
 
       it('should include cards due today', () => {
         // Arrange
-        const now = new Date('2024-01-15T12:00:00.000Z');
         const cards = [
           createMockCard('1', '2024-01-15T12:00:00.000Z', '2024-01-10T12:00:00.000Z'),
           createMockCard('2', '2024-01-15T11:00:00.000Z', '2024-01-10T12:00:00.000Z'),
@@ -311,7 +309,6 @@ describe('FSRS - Free Spaced Repetition Scheduler', () => {
 
       it('should filter out future cards', () => {
         // Arrange
-        const now = new Date('2024-01-15T12:00:00.000Z');
         const cards = [
           createMockCard('1', '2024-01-10T12:00:00.000Z', '2024-01-05T12:00:00.000Z'), // Overdue
           createMockCard('2', '2024-01-20T12:00:00.000Z', '2024-01-15T12:00:00.000Z'), // Future
@@ -343,7 +340,7 @@ describe('FSRS - Free Spaced Repetition Scheduler', () => {
     describe('Edge cases', () => {
       it('should handle empty array', () => {
         // Arrange
-        const cards: any[] = [];
+        const cards: Array<{ id: string; next_due_at: string | null; last_reviewed_at: string | null }> = [];
 
         // Act
         const result = selectCardsForReview(cards, 10);
@@ -413,7 +410,6 @@ describe('FSRS - Free Spaced Repetition Scheduler', () => {
     describe('Complex scenarios', () => {
       it('should handle mixed card types with correct priority', () => {
         // Arrange
-        const now = new Date('2024-01-15T12:00:00.000Z');
         const cards = [
           createMockCard('overdue-1', '2024-01-10T12:00:00.000Z', '2024-01-05T12:00:00.000Z'),
           createMockCard('never-1', null, null),
