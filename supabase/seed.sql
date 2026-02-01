@@ -21,6 +21,9 @@ BEGIN
 
   -- If user doesn't exist, create it
   IF test_user_id IS NULL THEN
+    -- Use a fixed UUID for test user (for consistent testing)
+    test_user_id := '8db7f0bc-a0a3-4cb9-9a6c-ea874aaf85bc'::uuid;
+    
     -- Insert into auth.users
     INSERT INTO auth.users (
       instance_id,
@@ -42,7 +45,7 @@ BEGIN
       recovery_token
     ) VALUES (
       '00000000-0000-0000-0000-000000000000',
-      gen_random_uuid(),
+      test_user_id,
       'authenticated',
       'authenticated',
       test_email,
@@ -58,8 +61,7 @@ BEGIN
       '',
       '',
       ''
-    )
-    RETURNING id INTO test_user_id;
+    );
 
     -- Insert into auth.identities
     INSERT INTO auth.identities (
