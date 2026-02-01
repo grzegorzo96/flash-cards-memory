@@ -24,8 +24,10 @@ export default function GenerateSetupPage() {
 
   const handleContinue = useCallback(() => {
     const finalDomain = domain === "Inne" && customDomain ? customDomain : domain;
-    sessionStorage.setItem("generate_domain", finalDomain);
-    window.location.href = "/generate/input";
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("generate_domain", finalDomain);
+      window.location.href = "/generate/input";
+    }
   }, [domain, customDomain]);
 
   const isValid = domain !== "Inne" || customDomain.trim().length > 0;

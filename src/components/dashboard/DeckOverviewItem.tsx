@@ -30,18 +30,18 @@ export function DeckOverviewItem({
   return (
     <li>
       <Card
-        className="cursor-pointer transition-colors hover:bg-accent"
+        className="cursor-pointer transition-all duration-300 hover-lift"
         onClick={handleOpen}
       >
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <CardTitle className="text-lg">{deck.name}</CardTitle>
             <div className="flex gap-2">
-              <Badge variant="secondary">
+              <Badge variant="secondary" className="scale-in">
                 {deck.card_count} {deck.card_count === 1 ? "karta" : "kart"}
               </Badge>
               {deck.due_today_count > 0 && (
-                <Badge variant="default">
+                <Badge variant="default" className="scale-in" style={{ animationDelay: '0.1s' }}>
                   {deck.due_today_count} do powtórki
                 </Badge>
               )}
@@ -56,7 +56,7 @@ export function DeckOverviewItem({
                 : `${deck.due_today_count} ${deck.due_today_count === 1 ? "karta" : "kart"} czeka na powtórkę`}
             </p>
             {deck.due_today_count > 0 && (
-              <Button onClick={handleStartStudy} size="sm">
+              <Button onClick={handleStartStudy} size="sm" className="hover-glow">
                 Rozpocznij naukę
               </Button>
             )}

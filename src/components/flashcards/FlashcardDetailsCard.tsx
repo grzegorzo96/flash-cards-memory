@@ -10,7 +10,7 @@ export function FlashcardDetailsCard({
 }: FlashcardDetailsCardProps) {
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="hover-lift scale-in">
         <CardHeader>
           <CardTitle>Pytanie</CardTitle>
         </CardHeader>
@@ -19,7 +19,7 @@ export function FlashcardDetailsCard({
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="hover-lift scale-in" style={{ animationDelay: '0.1s' }}>
         <CardHeader>
           <CardTitle>Odpowiedź</CardTitle>
         </CardHeader>

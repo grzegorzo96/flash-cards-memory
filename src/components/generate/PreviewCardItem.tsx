@@ -37,7 +37,7 @@ export function PreviewCardItem({
   }, [index, onDelete]);
 
   return (
-    <Card>
+    <Card className="hover-lift scale-in" style={{ animationDelay: `${index * 0.05}s` }}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">Fiszka #{index + 1}</CardTitle>
@@ -54,6 +54,7 @@ export function PreviewCardItem({
             value={card.question}
             onChange={handleQuestionChange}
             rows={3}
+            className="transition-all duration-300 focus:scale-[1.02]"
           />
         </div>
         <div className="space-y-2">
@@ -63,6 +64,7 @@ export function PreviewCardItem({
             value={card.answer}
             onChange={handleAnswerChange}
             rows={3}
+            className="transition-all duration-300 focus:scale-[1.02]"
           />
         </div>
       </CardContent>

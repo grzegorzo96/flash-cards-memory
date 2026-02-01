@@ -43,7 +43,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ user }) => {
   };
 
   return (
-    <div className="flex items-center justify-between p-4" data-testid="mobile-nav">
+    <div className="flex items-center justify-between p-4 bg-background" data-testid="mobile-nav">
       <div>
         <h1 className="text-xl font-bold text-primary">FlashCards</h1>
         <p className="text-xs text-muted-foreground">Memory App</p>

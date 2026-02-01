@@ -34,22 +34,30 @@ export default function GeneratePreviewPage({
   const { acceptCards, isAccepting } = useAcceptGeneratedCards();
   const { createDeck, isCreating } = useCreateDeck();
 
-  const [cards, setCards] = useState<PreviewCardDTO[]>(() => {
-    // Try to restore edited cards from sessionStorage first (for logged-in users)
-    if (!isGuest) {
+  const [cards, setCards] = useState<PreviewCardDTO[]>(generationData?.preview_cards || []);
+
+  // Update cards when generationData loads
+  useEffect(() => {
+    if (generationData?.preview_cards && cards.length === 0) {
+      setCards(generationData.preview_cards);
+    }
+  }, [generationData?.preview_cards, cards.length]);
+
+  // Try to restore edited cards from sessionStorage on mount (for logged-in users)
+  useEffect(() => {
+    if (!isGuest && typeof window !== "undefined") {
       const savedCards = sessionStorage.getItem('guest_edited_cards');
       if (savedCards) {
         try {
           const parsedCards = JSON.parse(savedCards);
           sessionStorage.removeItem('guest_edited_cards');
-          return parsedCards;
+          setCards(parsedCards);
         } catch (e) {
           console.error('Failed to restore guest cards:', e);
         }
       }
     }
-    return generationData?.preview_cards || [];
-  });
+  }, [isGuest]);
 
   const [deckId, setDeckId] = useState<string>("");
   const [newDeckName, setNewDeckName] = useState("");
@@ -92,7 +100,7 @@ export default function GeneratePreviewPage({
 
   const handleAcceptCards = useCallback(async () => {
     // If guest, save cards to sessionStorage and show auth dialog
-    if (isGuest) {
+    if (isGuest && typeof window !== "undefined") {
       sessionStorage.setItem('guest_edited_cards', JSON.stringify(cards));
       setShowAuthDialog(true);
       return;
