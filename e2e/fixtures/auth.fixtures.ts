@@ -29,6 +29,11 @@ export const testUsers = {
  * Use this to authenticate users before running tests
  */
 export async function loginAsUser(page: Page, user: TestUser) {
+  console.log('[E2E] Starting login process...');
+  console.log('[E2E] Email:', user.email);
+  console.log('[E2E] Password length:', user.password.length);
+  console.log('[E2E] Password (first 3 chars):', user.password.substring(0, 3) + '...');
+  
   await page.goto('/login');
   await page.waitForLoadState('networkidle');
   
@@ -36,6 +41,7 @@ export async function loginAsUser(page: Page, user: TestUser) {
   const emailInput = page.getByTestId('email-input');
   await emailInput.clear();
   await emailInput.fill(user.email);
+  console.log('[E2E] Email entered');
   
   // Clear and fill password - using pressSequentially for special characters
   const passwordInput = page.getByTestId('password-input');
@@ -44,12 +50,22 @@ export async function loginAsUser(page: Page, user: TestUser) {
   
   // Verify password was entered correctly (check length)
   const passwordValue = await passwordInput.inputValue();
+  console.log('[E2E] Password entered, length:', passwordValue.length);
+  
   if (passwordValue.length !== user.password.length) {
     throw new Error(`Password not fully entered. Expected ${user.password.length} chars, got ${passwordValue.length}`);
   }
   
+  // Take screenshot before clicking submit (in CI only)
+  if (process.env.CI) {
+    await page.screenshot({ path: 'before-login.png', fullPage: true });
+    console.log('[E2E] Screenshot saved: before-login.png');
+  }
+  
   // Click submit and wait for navigation
   const timeout = process.env.CI ? 30000 : 15000;
+  
+  console.log('[E2E] Clicking submit button...');
   
   try {
     await Promise.all([
@@ -57,6 +73,12 @@ export async function loginAsUser(page: Page, user: TestUser) {
       page.getByTestId('login-submit-button').click()
     ]);
   } catch (error) {
+    // Take screenshot after failed login
+    if (process.env.CI) {
+      await page.screenshot({ path: 'after-login-failed.png', fullPage: true });
+      console.log('[E2E] Screenshot saved: after-login-failed.png');
+    }
+    
     // Capture screenshot and error details
     console.error('Login navigation failed:', error);
     console.error('Current URL:', page.url());
@@ -65,11 +87,18 @@ export async function loginAsUser(page: Page, user: TestUser) {
     const errorAlert = page.getByRole('alert');
     if (await errorAlert.isVisible({ timeout: 2000 }).catch(() => false)) {
       const errorText = await errorAlert.textContent();
+      console.error('[E2E] Error alert found:', errorText);
       throw new Error(`Login failed with error: ${errorText}`);
     }
     
+    // Check for any visible error text
+    const bodyText = await page.textContent('body');
+    console.error('[E2E] Page body text (first 500 chars):', bodyText?.substring(0, 500));
+    
     throw new Error(`Login navigation timeout after ${timeout}ms. Current URL: ${page.url()}`);
   }
+  
+  console.log('[E2E] Navigation completed, current URL:', page.url());
   
   // If redirected to home page, login failed
   if (page.url().endsWith('/') || page.url().includes('/login')) {
@@ -81,6 +110,8 @@ export async function loginAsUser(page: Page, user: TestUser) {
     }
     throw new Error('Login failed - redirected to home or stayed on login page');
   }
+  
+  console.log('[E2E] Login successful!');
 }
 
 /**

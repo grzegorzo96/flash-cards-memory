@@ -93,8 +93,28 @@ jobs:
             "E2E_PASSWORD=${E2E_PASSWORD}" \
             > .env.test
 
+      - name: Verify environment variables
+        run: |
+          echo "Checking .env.test file..."
+          echo "SUPABASE_URL length: $(grep SUPABASE_URL .env.test | cut -d= -f2 | wc -c)"
+          echo "SUPABASE_KEY length: $(grep SUPABASE_KEY .env.test | cut -d= -f2 | wc -c)"
+          echo "E2E_USERNAME_ID length: $(grep E2E_USERNAME_ID .env.test | cut -d= -f2 | wc -c)"
+          echo "E2E_USERNAME: $(grep E2E_USERNAME .env.test | cut -d= -f2)"
+          echo "E2E_PASSWORD length: $(grep E2E_PASSWORD .env.test | cut -d= -f2 | wc -c)"
+
       - name: Run E2E tests
         run: npm run test:e2e
+
+      - name: Upload debug screenshots
+        uses: actions/upload-artifact@v6
+        if: failure()
+        with:
+          name: debug-screenshots
+          path: |
+            before-login.png
+            after-login-failed.png
+          retention-days: 7
+          if-no-files-found: ignore
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v6
@@ -102,14 +122,6 @@ jobs:
         with:
           name: playwright-report
           path: playwright-report/
-          retention-days: 30
-
-      - name: Upload E2E test coverage
-        uses: actions/upload-artifact@v6
-        if: always()
-        with:
-          name: e2e-test-coverage
-          path: coverage/
           retention-days: 30
 
   status-comment:
@@ -129,18 +141,6 @@ jobs:
         with:
           name: unit-test-coverage
           path: coverage-unit/
-
-      - name: Download E2E test coverage
-        uses: actions/download-artifact@v7
-        with:
-          name: e2e-test-coverage
-          path: coverage-e2e/
-
-      - name: Download Playwright report
-        uses: actions/download-artifact@v7
-        with:
-          name: playwright-report
-          path: playwright-report/
 
       - name: Create PR comment
         uses: actions/github-script@v8
