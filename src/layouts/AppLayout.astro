@@ -1,0 +1,53 @@
+---
+import '../styles/global.css';
+import Sidebar from '@/components/navigation/Sidebar';
+import MobileNav from '@/components/navigation/MobileNav';
+
+interface Props {
+  title?: string;
+  user: { email: string; id: string } | null;
+}
+
+const { title = 'FlashCardsMemory', user } = Astro.props;
+---
+
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="flex h-screen">
+      <!-- Desktop Sidebar (hidden on mobile) -->
+      <div class="hidden lg:block">
+        <Sidebar client:load user={user} />
+      </div>
+
+      <!-- Mobile Top Bar -->
+      <div
+        class="lg:hidden fixed top-0 left-0 right-0 z-50 bg-background border-b"
+      >
+        <MobileNav client:load user={user} />
+      </div>
+
+      <!-- Main Content Area -->
+      <main class="flex-1 overflow-y-auto pt-16 lg:pt-0 lg:ml-0">
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>
+
+<style>
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>

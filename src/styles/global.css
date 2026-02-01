@@ -60,3 +60,15 @@
 @theme {
   --font-sans: 'Inter', system-ui, sans-serif;
 }
+
+/* Page content utilities */
+.page-content {
+  @apply container mx-auto px-4 py-8;
+}
+
+/* Mobile adjustments for AppLayout */
+@media (max-width: 1023px) {
+  .page-content {
+    @apply pt-20;
+  }
+}

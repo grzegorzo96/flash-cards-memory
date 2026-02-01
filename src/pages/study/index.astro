@@ -1,0 +1,8 @@
+---
+import AppLayout from "@/layouts/AppLayout.astro";
+import StudyListPage from "@/components/study/StudyListPage";
+---
+
+<AppLayout title="Nauka - FlashCardMemory" user={Astro.locals.user}>
+  <StudyListPage client:load />
+</AppLayout>

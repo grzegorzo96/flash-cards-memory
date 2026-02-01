@@ -1,10 +1,10 @@
 ---
-import Layout from "@/layouts/Layout.astro";
+import AppLayout from "@/layouts/AppLayout.astro";
 import DeckFormPage from "@/components/decks/DeckFormPage";
 
 const { deckId } = Astro.params;
 ---
 
-<Layout title="Edytuj talię - FlashCardMemory">
+<AppLayout title="Edytuj talię - FlashCardMemory" user={Astro.locals.user}>
   <DeckFormPage deckId={deckId} client:load />
-</Layout>
+</AppLayout>

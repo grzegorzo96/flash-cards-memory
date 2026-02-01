@@ -1,8 +1,8 @@
 ---
-import Layout from "@/layouts/Layout.astro";
+import AppLayout from "@/layouts/AppLayout.astro";
 import DashboardPage from "@/components/dashboard/DashboardPage";
 ---
 
-<Layout title="Dashboard - FlashCardMemory">
+<AppLayout title="Dashboard - FlashCardMemory" user={Astro.locals.user}>
   <DashboardPage client:load />
-</Layout>
+</AppLayout>

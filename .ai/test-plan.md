@@ -1,7 +1,7 @@
-# Plan testów — 10xCards
+# Plan testów — FlashCardsMemory
 
 ## 1. Wprowadzenie i cele testowania
-Celem testowania jest zapewnienie stabilności, bezpieczeństwa i jakości aplikacji 10xCards poprzez weryfikację krytycznych ścieżek użytkownika (autoryzacja, CRUD decków/flashcards, sesje nauki, integracja AI), poprawności API, odporności na błędy zewnętrznych usług (Supabase, OpenRouter), oraz akceptowalnej wydajności i użyteczności interfejsu. Testy mają wykryć regresje, luki bezpieczeństwa i problemy UX przed wdrożeniem na produkcję.
+Celem testowania jest zapewnienie stabilności, bezpieczeństwa i jakości aplikacji FlashCardsMemory poprzez weryfikację krytycznych ścieżek użytkownika (autoryzacja, CRUD decków/flashcards, sesje nauki, integracja AI), poprawności API, odporności na błędy zewnętrznych usług (Supabase, OpenRouter), oraz akceptowalnej wydajności i użyteczności interfejsu. Testy mają wykryć regresje, luki bezpieczeństwa i problemy UX przed wdrożeniem na produkcję.
 
 ## 2. Zakres testów
 - Frontend (Astro + React + TypeScript + Tailwind + Shadcn/ui)

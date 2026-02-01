@@ -2,7 +2,7 @@
 
 ## 📋 Przegląd
 
-Projekt zawiera kompleksowy zestaw testów jednostkowych dla kluczowych modułów aplikacji 10xCards. Testy skupiają się na czystych funkcjach i logice biznesowej bez zależności zewnętrznych.
+Projekt zawiera kompleksowy zestaw testów jednostkowych dla kluczowych modułów aplikacji FlashCardsMemory. Testy skupiają się na czystych funkcjach i logice biznesowej bez zależności zewnętrznych.
 
 ## 🎯 Pokrycie testami
 
