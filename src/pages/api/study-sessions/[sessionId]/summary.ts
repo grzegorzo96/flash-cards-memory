@@ -1,7 +1,6 @@
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
 
-import { getOrCreateUserId } from '../../../../lib/helpers/userId';
 import {
   getStudySessionSummary,
   GetStudySessionSummaryServiceError,
@@ -70,7 +69,16 @@ export const GET: APIRoute = async (context) => {
     }
 
     // Get or create anonymous user ID from cookies
-    const userId = getOrCreateUserId(context.cookies);
+    const userId = context.locals.user?.id;
+    if (!userId) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
 
     // Retrieve study session summary using service layer
     const summary = await getStudySessionSummary(

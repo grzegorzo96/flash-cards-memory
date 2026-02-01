@@ -1,7 +1,6 @@
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
 
-import { getOrCreateUserId } from '../../../lib/helpers/userId';
 import {
   getGenerationStatus,
   GetGenerationStatusServiceError,
@@ -69,8 +68,8 @@ export const GET: APIRoute = async (context) => {
       );
     }
 
-    // Get or create anonymous user ID from cookies
-    const userId = getOrCreateUserId(context.cookies);
+    // Get user ID (null for guest users)
+    const userId = context.locals.user?.id || null;
 
     // Retrieve generation status using service layer
     const status = await getGenerationStatus(supabase, userId, validationResult.data);

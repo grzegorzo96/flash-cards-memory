@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CheckCircle2, Eye, EyeOff } from "lucide-react";
 
 const registerSchema = z
   .object({
@@ -19,20 +20,28 @@ const registerSchema = z
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
-export default function RegisterPage() {
+type RegisterPageProps = {
+  redirectUrl?: string;
+};
+
+export default function RegisterPage({ redirectUrl = '/dashboard' }: RegisterPageProps) {
   const [formData, setFormData] = useState<RegisterFormData>({
     email: "",
     password: "",
     confirmPassword: "",
   });
 
-  const [errors, setErrors] = useState<Partial<Record<keyof RegisterFormData, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof RegisterFormData | "general", string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleInputChange = useCallback(
     (field: keyof RegisterFormData, value: string) => {
       setFormData((prev) => ({ ...prev, [field]: value }));
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
+      setErrors((prev) => ({ ...prev, [field]: undefined, general: undefined }));
     },
     []
   );
@@ -56,15 +65,75 @@ export default function RegisterPage() {
       }
 
       setIsSubmitting(true);
-      
-      // MVP: Placeholder - brak rzeczywistej rejestracji
-      setTimeout(() => {
+
+      try {
+        const response = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: validation.data.email,
+            password: validation.data.password,
+          }),
+        });
+
+        if (response.status === 201) {
+          setIsSuccess(true);
+          setRegisteredEmail(validation.data.email);
+          return;
+        }
+
+        const data = await response.json();
+
+        if (response.status === 409) {
+          setErrors({ 
+            general: "Konto z tym adresem email już istnieje. Zaloguj się lub użyj innego adresu." 
+          });
+        } else {
+          setErrors({ general: "Wystąpił błąd podczas rejestracji. Spróbuj ponownie." });
+        }
+      } catch (error) {
+        console.error("Registration error:", error);
+        setErrors({ general: "Wystąpił błąd podczas rejestracji. Spróbuj ponownie." });
+      } finally {
         setIsSubmitting(false);
-        window.location.href = "/dashboard";
-      }, 1000);
+      }
     },
     [formData]
   );
+
+  if (isSuccess) {
+    return (
+      <main className="container mx-auto flex min-h-screen max-w-md items-center px-4 py-8">
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle className="text-2xl flex items-center gap-2">
+              <CheckCircle2 className="h-6 w-6 text-green-600" />
+              Konto zostało utworzone!
+            </CardTitle>
+            <CardDescription>
+              Sprawdź swoją skrzynkę pocztową
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Alert>
+              <AlertDescription>
+                Na adres <strong>{registeredEmail}</strong> wysłaliśmy link aktywacyjny.
+                Kliknij w link w emailu, aby aktywować konto.
+              </AlertDescription>
+            </Alert>
+
+            <Button className="w-full" asChild>
+              <a href={`/login${redirectUrl !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectUrl)}` : ''}`}>
+                Wróć do logowania
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
+      </main>
+    );
+  }
 
   return (
     <main className="container mx-auto flex min-h-screen max-w-md items-center px-4 py-8">
@@ -77,12 +146,11 @@ export default function RegisterPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Alert>
-              <AlertDescription>
-                MVP: Autoryzacja zostanie dodana w przyszłości. Możesz przejść do
-                dashboard bez rejestracji.
-              </AlertDescription>
-            </Alert>
+            {errors.general && (
+              <Alert variant="destructive">
+                <AlertDescription>{errors.general}</AlertDescription>
+              </Alert>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -105,16 +173,27 @@ export default function RegisterPage() {
 
             <div className="space-y-2">
               <Label htmlFor="password">Hasło</Label>
-              <Input
-                id="password"
-                type="password"
-                value={formData.password}
-                onChange={(e) => handleInputChange("password", e.target.value)}
-                placeholder="••••••••"
-                disabled={isSubmitting}
-                aria-invalid={!!errors.password}
-                aria-describedby={errors.password ? "password-error" : undefined}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={(e) => handleInputChange("password", e.target.value)}
+                  placeholder="••••••••"
+                  disabled={isSubmitting}
+                  aria-invalid={!!errors.password}
+                  aria-describedby={errors.password ? "password-error" : undefined}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  aria-label={showPassword ? "Ukryj hasło" : "Pokaż hasło"}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
               {errors.password && (
                 <p id="password-error" className="text-sm text-destructive">
                   {errors.password}
@@ -124,16 +203,27 @@ export default function RegisterPage() {
 
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">Potwierdź hasło</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                value={formData.confirmPassword}
-                onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-                placeholder="••••••••"
-                disabled={isSubmitting}
-                aria-invalid={!!errors.confirmPassword}
-                aria-describedby={errors.confirmPassword ? "confirm-password-error" : undefined}
-              />
+              <div className="relative">
+                <Input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={formData.confirmPassword}
+                  onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                  placeholder="••••••••"
+                  disabled={isSubmitting}
+                  aria-invalid={!!errors.confirmPassword}
+                  aria-describedby={errors.confirmPassword ? "confirm-password-error" : undefined}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  aria-label={showConfirmPassword ? "Ukryj hasło" : "Pokaż hasło"}
+                >
+                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
               {errors.confirmPassword && (
                 <p id="confirm-password-error" className="text-sm text-destructive">
                   {errors.confirmPassword}
@@ -145,16 +235,11 @@ export default function RegisterPage() {
               {isSubmitting ? "Rejestracja..." : "Zarejestruj się"}
             </Button>
 
-            <div className="space-y-2 text-center text-sm">
+            <div className="text-center text-sm">
               <p>
                 Masz już konto?{" "}
-                <a href="/login" className="text-primary hover:underline">
+                <a href={`/login${redirectUrl !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectUrl)}` : ''}`} className="text-primary hover:underline">
                   Zaloguj się
-                </a>
-              </p>
-              <p>
-                <a href="/dashboard" className="text-primary hover:underline">
-                  Przejdź do dashboard (MVP)
                 </a>
               </p>
             </div>

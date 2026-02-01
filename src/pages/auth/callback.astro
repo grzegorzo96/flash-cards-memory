@@ -1,0 +1,22 @@
+---
+export const prerender = false;
+
+const supabase = Astro.locals.supabase;
+const code = Astro.url.searchParams.get('code');
+const redirect = Astro.url.searchParams.get('redirect');
+
+if (code) {
+  const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+  if (error) {
+    console.error('Auth callback error:', error);
+    return Astro.redirect('/login?error=auth_callback_failed');
+  }
+
+  // Redirect to the specified URL or dashboard
+  const redirectUrl = redirect || '/dashboard';
+  return Astro.redirect(redirectUrl);
+}
+
+return Astro.redirect('/login');
+---

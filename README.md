@@ -45,6 +45,12 @@ FlashCardsMemory is a web application for creating and learning with educational
 - ESLint
 - Prettier
 
+**Testing**
+- Vitest (unit tests)
+- React Testing Library
+- MSW (Mock Service Worker)
+- Playwright (E2E tests)
+
 ## Getting started locally
 **Prerequisites**
 - Node.js `22.17.1` 
@@ -64,13 +70,29 @@ Astro will start the dev server (default: `http://localhost:4321`).
 
 ## Available scripts
 From `package.json`:
+
+**Development**
 - `npm run dev` - start Astro dev server
 - `npm run build` - build for production
 - `npm run preview` - preview production build
 - `npm run astro` - run Astro CLI commands
+
+**Code quality**
 - `npm run lint` - run ESLint to check for linting issues
 - `npm run format` - format files with Prettier
 - `npm run format:check` - check formatting with Prettier
+
+**Testing**
+- `npm run test` - run unit tests in watch mode
+- `npm run test:run` - run unit tests once
+- `npm run test:ui` - run unit tests with interactive UI
+- `npm run test:coverage` - run unit tests with coverage report
+- `npm run test:e2e` - run end-to-end tests with Playwright
+- `npm run test:e2e:ui` - run E2E tests with interactive UI
+- `npm run test:e2e:debug` - run E2E tests in debug mode
+- `npm run test:e2e:codegen` - generate E2E tests using Playwright codegen
+
+For more details, see [TESTING.md](./TESTING.md)
 
 ## Project scope
 **In MVP**

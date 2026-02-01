@@ -114,17 +114,34 @@ FlashCardsMemory rozwiązuje te problemy poprzez:
 - Walidacja długości tekstu źródłowego (min/max)
 - Walidacja formularzy (wymagane pola, format email)
 
-### 3.10 Analityka (PostHog)
+### 3.10 Tryb gościa (Generowanie bez logowania)
+- Strona główna dostępna dla niezalogowanych użytkowników
+- Pole tekstowe do wklejenia tekstu źródłowego (limit 5000 znaków) na stronie głównej
+- Dropdown wyboru dziedziny wiedzy
+- Przyciski "Zaloguj się" i "Zarejestruj" widoczne w nawigacji dla gości
+- Generowanie fiszek AI bez konieczności logowania
+- Wyświetlenie podglądu wygenerowanych fiszek
+- Możliwość edycji i usuwania fiszek w podglądzie
+- Blokada zapisu fiszek dla niezalogowanych użytkowników
+- Modal logowania/rejestracji przy próbie zapisania fiszek
+- Zachowanie wygenerowanych fiszek w sesji po zalogowaniu/rejestracji
+- Komunikat informujący o konieczności zalogowania się do zapisu
+- Śledzenie konwersji gości na zarejestrowanych użytkowników
+
+### 3.11 Analityka (PostHog)
 - Śledzenie wskaźnika akceptacji fiszek AI
 - Korelacja jakości generatów z długością tekstu źródłowego
 - Logowanie instrukcji regeneracji jako feedback loop
 - Monitorowanie retencji użytkowników
 - Śledzenie proporcji fiszek AI vs manualnych
+- Śledzenie konwersji gości na użytkowników
+- Pomiar liczby generacji przez gości przed rejestracją
 
 ## 4. Granice produktu
 
 ### 4.1 W zakresie MVP
 - Generowanie fiszek przez AI na podstawie wklejonego tekstu
+- Tryb gościa - generowanie fiszek bez logowania z wymuszeniem rejestracji przy zapisie
 - Manualne tworzenie, edycja i usuwanie fiszek
 - System kont użytkowników z uwierzytelnianiem
 - Organizacja fiszek w talie
@@ -191,6 +208,45 @@ Kryteria akceptacji:
 - Link do resetowania jest ważny przez 24 godziny
 - Po kliknięciu w link użytkownik może ustawić nowe hasło
 - System potwierdza pomyślną zmianę hasła
+
+### Tryb gościa
+
+US-037
+Tytuł: Generowanie fiszek jako gość
+Opis: Jako niezalogowany użytkownik (gość) chcę wypróbować funkcję generowania fiszek AI, aby ocenić jakość aplikacji przed rejestracją.
+Kryteria akceptacji:
+- Strona główna (/) jest dostępna dla niezalogowanych użytkowników
+- Formularz generowania fiszek jest widoczny na stronie głównej
+- Pole tekstowe akceptuje tekst do 5000 znaków
+- Dropdown wyboru dziedziny wiedzy jest dostępny
+- Przyciski "Zaloguj się" i "Zarejestruj" są widoczne w nawigacji
+- Po kliknięciu "Generuj" fiszki są generowane przez AI
+- Wygenerowane fiszki są wyświetlane w widoku podglądu
+- Gość może edytować i usuwać fiszki w podglądzie
+- Komunikat informuje o konieczności zalogowania się do zapisania fiszek
+
+US-038
+Tytuł: Wymuszenie logowania przy zapisie fiszek przez gościa
+Opis: Jako gość, który wygenerował fiszki, chcę zostać poproszony o rejestrację/logowanie przy próbie ich zapisania, aby móc zachować swoje materiały.
+Kryteria akceptacji:
+- Przycisk "Zapisz fiszki" jest widoczny w widoku podglądu dla gości
+- Kliknięcie "Zapisz fiszki" wyświetla modal z opcjami logowania i rejestracji
+- Modal zawiera wyraźny komunikat "Zaloguj się lub zarejestruj, aby zapisać fiszki"
+- Modal oferuje dwie opcje: "Zaloguj się" i "Zarejestruj się"
+- Po wybrze opcji użytkownik jest przekierowany do odpowiedniego formularza
+- Wygenerowane fiszki są zachowane w sesji/localStorage
+- Po pomyślnym zalogowaniu/rejestracji użytkownik wraca do widoku podglądu z zachowanymi fiszkami
+
+US-039
+Tytuł: Zachowanie fiszek gościa po rejestracji
+Opis: Jako gość, który się zarejestrował, chcę móc zapisać fiszki wygenerowane przed rejestracją, aby nie stracić pracy.
+Kryteria akceptacji:
+- Po pomyślnej rejestracji użytkownik jest przekierowany z powrotem do widoku podglądu
+- Wszystkie wygenerowane fiszki (wraz z edycjami) są zachowane
+- Użytkownik może kontynuować edycję fiszek
+- Użytkownik może wybrać talię i zapisać fiszki normalnie
+- Jeśli użytkownik nie ma żadnych talii, system oferuje utworzenie pierwszej talii
+- Fiszki są zapisywane z flagą is_accepted i źródłem 'ai'
 
 ### Generowanie fiszek AI
 
@@ -559,6 +615,18 @@ Ukończenie sesji nauki
 Korelacja długości tekstu z jakością
 - Analiza zależności między długością tekstu źródłowego a wskaźnikiem akceptacji
 - Pomiar: Analiza korelacji w PostHog
+
+Konwersja gości na użytkowników
+- Cel: 25% gości, którzy wygenerowali fiszki, rejestruje się w aplikacji
+- Pomiar: Stosunek rejestracji po generowaniu fiszek jako gość do wszystkich generacji przez gości (PostHog)
+
+Liczba generacji przed rejestracją
+- Średnia liczba prób generowania fiszek przez gościa przed rejestracją
+- Pomiar: Analiza ścieżki użytkownika w PostHog
+
+Czas do konwersji
+- Średni czas od pierwszego generowania jako gość do rejestracji
+- Pomiar: Timestamp generowania i timestamp rejestracji (PostHog)
 
 ### 6.3 Metryki techniczne
 

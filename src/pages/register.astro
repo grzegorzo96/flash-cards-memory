@@ -1,8 +1,19 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import RegisterPage from "@/components/auth/RegisterPage";
+
+export const prerender = false;
+
+// Check if user is already logged in
+const user = Astro.locals.user;
+if (user) {
+  return Astro.redirect('/dashboard');
+}
+
+// Get redirect URL from query params
+const redirectUrl = Astro.url.searchParams.get('redirect') || '/dashboard';
 ---
 
 <Layout title="Rejestracja - FlashCardMemory">
-  <RegisterPage client:load />
+  <RegisterPage client:load redirectUrl={redirectUrl} />
 </Layout>

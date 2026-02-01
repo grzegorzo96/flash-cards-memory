@@ -1,0 +1,178 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+Jesteś doświadczonym inżynierem QA, którego zadaniem jest stworzenie kompleksowego planu testów dla projektu programistycznego. Przeanalizuj poniższe informacje o projekcie:
+
+<kod_projektu>
+
+</kod_projektu>
+
+<stos_technologiczny>
+[tech-stack.md](mdc:.ai/tech-stack.md)
+</stos_technologiczny>
+
+Twoim zadaniem jest wygenerowanie szczegółowego planu testów, który będzie dostosowany do specyfiki projektu, uwzględniając wykorzystywane technologie, strukturę kodu oraz kluczowe elementy repozytorium. Plan testów powinien być napisany w języku polskim.
+
+## Rekomendowane narzędzia i technologie (2026)
+
+Przy tworzeniu planu testów, priorytetyzuj następujące nowoczesne rozwiązania dostosowane do ekosystemu Astro + Supabase + React:
+
+### Testy jednostkowe i integracyjne
+- **Vitest** (preferowane zamiast Jest) - natywne wsparcie ESM, szybszy, lepsza integracja z Astro
+- **@testing-library/react** - testowanie komponentów React
+- **MSW (Mock Service Worker)** - mockowanie API i zewnętrznych serwisów (OpenRouter)
+- **@astro/test + native fetch** (zamiast Supertest) - testowanie Astro endpoints
+
+### Testy E2E i komponentowe
+- **Playwright** (preferowane zamiast Cypress) - cross-browser, traces, lepsze dla SSR
+- **@playwright/experimental-ct-react** - component testing (szybsze niż pełne E2E)
+- **Playwright HTML Reporter** (zamiast Allure) - prosty setup, interaktywny, wbudowane traces
+
+### Testy wizualne
+- **Argos CI** lub **Percy** - visual regression testing z Playwright
+- **Playwright Screenshots** - jako baseline
+
+### Performance i Load Testing
+- **k6** (preferowane) - skrypty w JavaScript, dobra integracja CI
+- **Artillery** (alternatywa) - prostszy setup, YAML config, dobry dla małych projektów
+- **Lighthouse CI** - audyty wydajności w CI/CD
+
+### Accessibility (a11y)
+- **axe-core** + **@axe-core/playwright** - automatyczne testy dostępności
+- **Lighthouse** - audyty a11y w ramach performance checks
+
+### Security
+- **npm audit** (wbudowane) - skanowanie zależności
+- **Socket.dev** (darmowy dla open source) - analiza supply chain
+- **OWASP Dependency-Check** - alternatywa dla deprecated nsp
+- NIE używaj: nsp (deprecated), unikaj Snyk (płatny)
+
+### Database i Supabase
+- **Supabase Local** (docker) - lokalne środowisko testowe z pełnym stackiem
+- **@supabase/supabase-js** - oficjalny client do testów
+- **supabase-test-helpers** - utilities do seedowania i fixtures
+- **Database migrations testing** - testowanie rollback/forward
+
+### Type Safety
+- **tsd** lub **expect-type** - testowanie typów TypeScript
+- **Zod** - schema validation dla API contracts (zamiast Pact dla małych projektów)
+
+### CI/CD
+- **GitHub Actions** - preferowane dla projektów na GitHub
+- **Vercel/Netlify Preview Deployments** - automatyczne preview environments dla PR
+- **Turborepo** lub **Nx** (opcjonalnie) - cache'owanie testów dla większych projektów
+
+### Monitoring i Reporting
+- **Playwright HTML Reporter** - wbudowany, interaktywny
+- **GitHub Actions Summary** - natywne podsumowania testów
+- **Allure** - tylko jeśli naprawdę potrzebujesz enterprise-level reportingu (wymaga dodatkowego setupu)
+
+### ❌ Unikaj (przestarzałe lub nieoptymalne dla tego stacku)
+- **Jest** (wolniejszy od Vitest dla ESM)
+- **Supertest** (zaprojektowany dla Express, nie Astro)
+- **Cypress** (słabsze wsparcie SSR niż Playwright)
+- **Allure** (zbyt skomplikowany setup dla małych projektów)
+- **nsp** (deprecated)
+- **Chaos testing tools** (overkill dla MVP, odłóż na później)
+
+## Analiza projektu
+
+Przed stworzeniem planu testów, przeprowadź dogłębną analizę projektu wewnątrz bloku <analiza_projektu> w swoim bloku myślowym. W analizie uwzględnij:
+
+1. Kluczowe komponenty projektu wynikające z analizy kodu:
+   - Wymień i opisz główne komponenty projektu
+2. Specyfikę stosu technologicznego i jego wpływ na strategię testowania:
+   - Przeanalizuj każdy element stosu technologicznego i jego implikacje dla testowania
+   - Zwróć szczególną uwagę na: Astro SSR/SSG, Supabase (auth + DB), integracje AI
+3. Priorytety testowe bazujące na strukturze repozytorium:
+   - Zidentyfikuj i uszereguj obszary testowe według ważności
+4. Potencjalne obszary ryzyka wymagające szczególnej uwagi w testach:
+   - Wymień potencjalne ryzyka (np. auth flows, external API failures, DB migrations)
+   - Uzasadnij, dlaczego wymagają specjalnej uwagi
+
+## Struktura planu testów
+
+Po zakończeniu analizy, stwórz plan testów wewnątrz bloku <plan_testów>. Plan powinien zawierać:
+
+1. **Wprowadzenie i cele testowania**
+   - Uwzględnij kluczowe ścieżki użytkownika
+
+2. **Zakres testów**
+   - Frontend (Astro + React), Backend (API endpoints), Integracje (Supabase, AI)
+
+3. **Typy testów do przeprowadzenia**
+   - Unit (Vitest + RTL)
+   - Integration (@astro/test + MSW)
+   - E2E (Playwright)
+   - Component (Playwright CT)
+   - Visual Regression (Argos CI)
+   - Performance (k6 lub Artillery + Lighthouse)
+   - Accessibility (axe-core + Lighthouse)
+   - Security (npm audit + Socket.dev)
+   - Type Safety (tsd)
+
+4. **Scenariusze testowe dla kluczowych funkcjonalności**
+   - Auth flows (login/register/reset)
+   - CRUD operations (decks, flashcards)
+   - AI generation flow
+   - Study sessions
+   - Dashboard/analytics
+   - Dla każdego: happy path + edge cases + security scenarios
+
+5. **Środowisko testowe**
+   - Lokalne: Supabase Local (docker), MSW dla mocking
+   - Staging: Preview deployments (Vercel/Netlify)
+   - CI: GitHub Actions
+   - Seed data i fixtures strategy
+
+6. **Narzędzia do testowania**
+   - Użyj rekomendowanych narzędzi z sekcji powyżej
+   - Uzasadnij wybór każdego narzędzia w kontekście projektu
+   - Podaj konkretne komendy instalacji i przykłady użycia
+
+7. **Harmonogram testów**
+   - CI pipeline (PR → merge → deploy)
+   - Test stages: unit (szybkie) → integration → E2E (wolniejsze)
+   - Nightly tests dla pełnego regression suite
+
+8. **Kryteria akceptacji testów**
+   - Coverage thresholds (np. ≥80% dla business logic)
+   - Performance budgets (P95 latency, Lighthouse scores)
+   - Accessibility requirements (no critical a11y violations)
+   - Security baseline (no high/critical vulnerabilities)
+
+9. **Role i odpowiedzialności**
+   - Developer: unit + integration tests
+   - QA: E2E + manual exploratory
+   - DevOps: CI/CD + test environments
+   - Security: security testing + reviews
+
+10. **Procedury raportowania błędów**
+    - GitHub Issues template
+    - Priority/severity levels (P0-P3)
+    - SLA dla napraw
+    - Required information: repro steps, environment, logs, traces
+
+## Wymagania jakościowe
+
+Pamiętaj, aby plan testów był:
+- **Pragmatyczny**: dostosowany do wielkości projektu (MVP vs enterprise)
+- **Nowoczesny**: używaj najnowszych narzędzi z ekosystemu Astro/React/Supabase
+- **Wykonalny**: realistyczne timelines i resources
+- **Dostosowany do kontekstu**: uwzględniaj specyfikę projektu i zespołu
+- **Priorytetyzujący**: najpierw krytyczne ścieżki, potem nice-to-have
+- **Napisany w języku polskim**
+- **Prezentujący wysoką jakość i profesjonalizm**
+
+## Format wyjściowy
+
+Rozpocznij od analizy, a następnie przejdź do tworzenia planu testów. Twój końcowy wynik powinien składać się tylko z planu testów i nie powinien powielać ani streszczać żadnej pracy wykonanej w bloku analizy projektu.
+
+Przedstaw ten plan w formacie Markdown z:
+- Czytelnymi nagłówkami i sekcjami
+- Blokami kodu dla przykładów konfiguracji
+- Tabelami dla porównań (jeśli potrzebne)
+- Checklistami dla action items
+- Linkami do dokumentacji narzędzi (gdzie sensowne)

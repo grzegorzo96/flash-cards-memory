@@ -26,14 +26,14 @@ export class CreateGenerationRequestServiceError extends Error {
  * This initiates the process of generating flashcards from source text.
  *
  * @param supabase - Supabase client instance
- * @param userId - User ID to associate the request with
+ * @param userId - User ID to associate the request with (null for guest users)
  * @param command - Generation request data
  * @returns Created generation request details
  * @throws {CreateGenerationRequestServiceError} If request creation fails
  */
 export async function createGenerationRequest(
   supabase: SupabaseClient,
-  userId: string,
+  userId: string | null,
   command: GenerationRequestCreateCommand
 ): Promise<GenerationRequestCreateResponseDTO> {
   try {
