@@ -13,7 +13,8 @@ export interface TestUser {
 export const testUsers = {
   validUser: {
     email: process.env.E2E_USERNAME || 'grze963@gmail.com',
-    password: process.env.E2E_PASSWORD || 'Dupa123#@!',
+    // Remove quotes if they exist (from .env file)
+    password: (process.env.E2E_PASSWORD || 'Dupa123!@#').replace(/^["']|["']$/g, ''),
     id: process.env.E2E_USERNAME_ID || '9a8a6f77-4bf9-49f3-9844-c9586444a62f',
   },
   anonymousUser: {
@@ -48,16 +49,33 @@ export async function loginAsUser(page: Page, user: TestUser) {
   }
   
   // Click submit and wait for navigation
-  await Promise.all([
-    page.waitForURL(/\/(dashboard|$)/, { timeout: 15000 }),
-    page.getByTestId('login-submit-button').click()
-  ]);
+  const timeout = process.env.CI ? 30000 : 15000;
+  
+  try {
+    await Promise.all([
+      page.waitForURL(/\/(dashboard|$)/, { timeout }),
+      page.getByTestId('login-submit-button').click()
+    ]);
+  } catch (error) {
+    // Capture screenshot and error details
+    console.error('Login navigation failed:', error);
+    console.error('Current URL:', page.url());
+    
+    // Check for error messages
+    const errorAlert = page.getByRole('alert');
+    if (await errorAlert.isVisible({ timeout: 2000 }).catch(() => false)) {
+      const errorText = await errorAlert.textContent();
+      throw new Error(`Login failed with error: ${errorText}`);
+    }
+    
+    throw new Error(`Login navigation timeout after ${timeout}ms. Current URL: ${page.url()}`);
+  }
   
   // If redirected to home page, login failed
   if (page.url().endsWith('/') || page.url().includes('/login')) {
     // Check for error messages
     const errorAlert = page.getByRole('alert');
-    if (await errorAlert.isVisible()) {
+    if (await errorAlert.isVisible({ timeout: 2000 }).catch(() => false)) {
       const errorText = await errorAlert.textContent();
       throw new Error(`Login failed: ${errorText}`);
     }

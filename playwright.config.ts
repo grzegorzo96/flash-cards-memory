@@ -45,6 +45,12 @@ export default defineConfig({
     
     /* Take screenshot on failure */
     screenshot: 'only-on-failure',
+    
+    /* Increase timeout for actions in CI */
+    actionTimeout: process.env.CI ? 15000 : 10000,
+    
+    /* Increase navigation timeout in CI */
+    navigationTimeout: process.env.CI ? 30000 : 15000,
   },
 
   /* Configure projects for major browsers */
