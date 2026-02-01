@@ -81,18 +81,32 @@ Astro will start the dev server (default: `http://localhost:4321`).
 
 **GitHub Actions CI/CD setup**
 
-To run E2E tests in GitHub Actions, configure the following secrets in your repository:
+To run E2E tests in GitHub Actions, you need to:
 
-1. Go to: `Settings` → `Environments` → `integration`
-2. Add the following **Environment secrets**:
-   - `SUPABASE_URL` - Your Supabase project URL
+**1. Create a test user in your Supabase database:**
+   - Go to Supabase Dashboard → Authentication → Users
+   - Create a new user with email and password
+   - Note the User UID (you'll need it for `E2E_USERNAME_ID`)
+
+**2. Configure GitHub Secrets:**
+
+Go to: `Settings` → `Environments` → `integration`
+
+Add the following **Environment secrets**:
+   - `SUPABASE_URL` - Your Supabase project URL (e.g., `https://xxx.supabase.co`)
    - `SUPABASE_PUBLIC_KEY` - Your Supabase anon/public key
-   - `SUPABASE_SECRET_KEY` - (optional, not used in current setup)
 
-3. Add the following **Repository secrets** (Settings → Secrets and variables → Actions):
-   - `E2E_USERNAME_ID` - Test user UUID
-   - `E2E_USERNAME` - Test user email
-   - `E2E_PASSWORD` - Test user password
+Go to: `Settings` → `Secrets and variables` → `Actions`
+
+Add the following **Repository secrets**:
+   - `E2E_USERNAME_ID` - Test user UUID (from Supabase Auth Users)
+   - `E2E_USERNAME` - Test user email (e.g., `test@example.com`)
+   - `E2E_PASSWORD` - Test user password (without quotes, e.g., `MyPassword123!`)
+
+**⚠️ Important:** 
+- The test user must exist in your Supabase database
+- The password should be entered WITHOUT quotes in GitHub Secrets
+- The email should match exactly what's in Supabase Auth
 
 Note: The workflow automatically creates a `.env.test` file from these secrets before running E2E tests.
 
