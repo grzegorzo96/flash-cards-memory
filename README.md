@@ -1,4 +1,4 @@
-# FlashCardsMemory
+# FlashCardsMemory with AI
 
 [![status](https://img.shields.io/badge/status-MVP%20in%20progress-blue)](#project-status)
 [![node](https://img.shields.io/badge/node-22.17.1-339933)](#getting-started-locally)
