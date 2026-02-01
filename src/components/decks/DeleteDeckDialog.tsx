@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import {
   Dialog,
   DialogContent,
@@ -36,14 +36,13 @@ export function DeleteDeckDialog({
     }
   }, [isConfirmValid, onConfirm]);
 
-  useEffect(() => {
-    if (!isOpen) {
-      setConfirmText("");
-    }
-  }, [isOpen]);
+  const handleCancel = useCallback(() => {
+    setConfirmText("");
+    onCancel();
+  }, [onCancel]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onCancel()}>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && handleCancel()}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Usuń talię</DialogTitle>
@@ -71,7 +70,7 @@ export function DeleteDeckDialog({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onCancel} disabled={isDeleting}>
+          <Button variant="outline" onClick={handleCancel} disabled={isDeleting}>
             Anuluj
           </Button>
           <Button

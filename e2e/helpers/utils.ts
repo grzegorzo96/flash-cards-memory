@@ -107,7 +107,7 @@ export function setupConsoleErrorListener(page: Page) {
 export async function mockAPIResponse(
   page: Page,
   urlPattern: string | RegExp,
-  responseData: any,
+  responseData: unknown,
   status = 200
 ) {
   await page.route(urlPattern, async (route) => {

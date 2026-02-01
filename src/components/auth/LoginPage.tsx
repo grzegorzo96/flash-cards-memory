@@ -73,8 +73,6 @@ export default function LoginPage({ redirectUrl = "/dashboard" }: LoginPageProps
           return;
         }
 
-        const data = await response.json();
-
         if (response.status === 401) {
           setErrors({ general: "Nieprawidłowy email lub hasło" });
         } else if (response.status === 403) {
