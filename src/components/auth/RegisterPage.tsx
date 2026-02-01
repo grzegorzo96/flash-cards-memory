@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, Eye, EyeOff } from "lucide-react";
 
 const registerSchema = z
@@ -83,8 +83,6 @@ export default function RegisterPage({ redirectUrl = '/dashboard' }: RegisterPag
           setRegisteredEmail(validation.data.email);
           return;
         }
-
-        const data = await response.json();
 
         if (response.status === 409) {
           setErrors({ 

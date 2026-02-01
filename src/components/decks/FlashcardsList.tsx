@@ -2,7 +2,6 @@ import type { FlashcardListItemDTO } from "@/types";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,

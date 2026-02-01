@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { z } from "zod";
-import type { GetFlashcardResponseDTO, DeckListItemDTO, LanguageCode } from "@/types";
+import type { GetFlashcardResponseDTO, DeckListItemDTO } from "@/types";
 import { useCreateFlashcard } from "@/components/hooks/useCreateFlashcard";
 import { useUpdateFlashcard } from "@/components/hooks/useUpdateFlashcard";
 import { Card, CardContent } from "@/components/ui/card";
@@ -49,27 +49,16 @@ export function FlashcardForm({
   const { createFlashcard, isCreating } = useCreateFlashcard();
   const { updateFlashcard, isUpdating } = useUpdateFlashcard();
 
-  const [formData, setFormData] = useState<FlashcardFormData>({
+  const [formData, setFormData] = useState<FlashcardFormData>(() => ({
     question: initialData?.question || "",
     answer: initialData?.answer || "",
     source_language: "pl",
     target_language: "en",
     deck_id: initialDeckId || initialData?.deck_id || "",
-  });
+  }));
 
   const [errors, setErrors] = useState<Partial<Record<keyof FlashcardFormData, string>>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (initialData) {
-      setFormData((prev) => ({
-        ...prev,
-        question: initialData.question,
-        answer: initialData.answer,
-        deck_id: initialData.deck_id,
-      }));
-    }
-  }, [initialData]);
 
   const handleInputChange = useCallback(
     (field: keyof FlashcardFormData, value: string) => {

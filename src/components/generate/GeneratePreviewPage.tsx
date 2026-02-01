@@ -34,7 +34,23 @@ export default function GeneratePreviewPage({
   const { acceptCards, isAccepting } = useAcceptGeneratedCards();
   const { createDeck, isCreating } = useCreateDeck();
 
-  const [cards, setCards] = useState<PreviewCardDTO[]>([]);
+  const [cards, setCards] = useState<PreviewCardDTO[]>(() => {
+    // Try to restore edited cards from sessionStorage first (for logged-in users)
+    if (!isGuest) {
+      const savedCards = sessionStorage.getItem('guest_edited_cards');
+      if (savedCards) {
+        try {
+          const parsedCards = JSON.parse(savedCards);
+          sessionStorage.removeItem('guest_edited_cards');
+          return parsedCards;
+        } catch (e) {
+          console.error('Failed to restore guest cards:', e);
+        }
+      }
+    }
+    return generationData?.preview_cards || [];
+  });
+
   const [deckId, setDeckId] = useState<string>("");
   const [newDeckName, setNewDeckName] = useState("");
   const [showNewDeckForm, setShowNewDeckForm] = useState(false);
@@ -46,26 +62,6 @@ export default function GeneratePreviewPage({
       window.location.href = "/generate/input";
     }
   }, [requestId]);
-
-  useEffect(() => {
-    if (generationData?.preview_cards) {
-      setCards(generationData.preview_cards);
-    }
-  }, [generationData]);
-
-  // Restore edited cards from sessionStorage after login
-  useEffect(() => {
-    const savedCards = sessionStorage.getItem('guest_edited_cards');
-    if (savedCards && !isGuest && cards.length === 0) {
-      try {
-        const parsedCards = JSON.parse(savedCards);
-        setCards(parsedCards);
-        sessionStorage.removeItem('guest_edited_cards');
-      } catch (e) {
-        console.error('Failed to restore guest cards:', e);
-      }
-    }
-  }, [isGuest, cards.length]);
 
   const handleCardEdit = useCallback(
     (index: number, field: "question" | "answer", value: string) => {

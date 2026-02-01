@@ -14,11 +14,11 @@ type SidebarProps = {
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ user }) => {
-  const [currentPath, setCurrentPath] = useState('');
+  const [currentPath, setCurrentPath] = useState(() => 
+    typeof window !== 'undefined' ? window.location.pathname : ''
+  );
 
   useEffect(() => {
-    setCurrentPath(window.location.pathname);
-
     // Listen to navigation events
     const handleLocationChange = () => {
       setCurrentPath(window.location.pathname);
