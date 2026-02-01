@@ -11,25 +11,25 @@ type RatingPanelProps = {
 const RATING_OPTIONS = [
   {
     rating: 1 as ReviewRating,
-    label: "Ponownie",
+    label: "Bardzo słabo",
     description: "Nie pamiętam",
     color: "bg-red-500 hover:bg-red-600",
   },
   {
     rating: 2 as ReviewRating,
-    label: "Trudne",
+    label: "Słabo",
     description: "Z trudem przypomniałem",
     color: "bg-orange-500 hover:bg-orange-600",
   },
   {
     rating: 3 as ReviewRating,
-    label: "Dobre",
+    label: "Dobrze",
     description: "Przypomniałem po chwili",
     color: "bg-blue-500 hover:bg-blue-600",
   },
   {
     rating: 4 as ReviewRating,
-    label: "Łatwe",
+    label: "Bardzo dobrze",
     description: "Pamiętam dobrze",
     color: "bg-green-500 hover:bg-green-600",
   },

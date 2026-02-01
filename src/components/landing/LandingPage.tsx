@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -45,6 +46,7 @@ export default function LandingPage() {
     target_language: 'en',
     domain: 'Programowanie',
   });
+  const [customDomain, setCustomDomain] = useState('');
 
   const [errors, setErrors] = useState<Partial<Record<keyof GenerateFormData, string>>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -54,6 +56,11 @@ export default function LandingPage() {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: undefined }));
     setSubmitError(null);
+    
+    // Clear custom domain when switching away from "Inne"
+    if (field === 'domain' && value !== 'Inne') {
+      setCustomDomain('');
+    }
   }, []);
 
   const handleSubmit = useCallback(
@@ -61,6 +68,17 @@ export default function LandingPage() {
       e.preventDefault();
       setErrors({});
       setSubmitError(null);
+
+      // Use custom domain if "Inne" is selected and custom domain is provided
+      const finalDomain = formData.domain === 'Inne' && customDomain.trim() 
+        ? customDomain.trim() 
+        : formData.domain;
+
+      // Validate that if "Inne" is selected, custom domain must be provided
+      if (formData.domain === 'Inne' && !customDomain.trim()) {
+        setErrors({ domain: 'Wpisz nazwę dziedziny' });
+        return;
+      }
 
       const validation = generateSchema.safeParse(formData);
 
@@ -85,7 +103,7 @@ export default function LandingPage() {
           },
           body: JSON.stringify({
             source_text: validation.data.source_text,
-            domain: validation.data.domain,
+            domain: finalDomain,
             target_language: validation.data.target_language,
           }),
         });
@@ -104,7 +122,7 @@ export default function LandingPage() {
         setIsSubmitting(false);
       }
     },
-    [formData]
+    [formData, customDomain]
   );
 
   const charCount = formData.source_text.length;
@@ -159,6 +177,31 @@ export default function LandingPage() {
                   <p className="text-sm text-destructive">{errors.domain}</p>
                 )}
               </div>
+
+              {/* Custom Domain Input */}
+              {formData.domain === 'Inne' && (
+                <div className="space-y-2">
+                  <Label htmlFor="custom-domain">
+                    Własna dziedzina <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="custom-domain"
+                    value={customDomain}
+                    onChange={(e) => {
+                      setCustomDomain(e.target.value);
+                      setErrors((prev) => ({ ...prev, domain: undefined }));
+                      setSubmitError(null);
+                    }}
+                    placeholder="np. Astronomia, Ekonomia..."
+                    maxLength={100}
+                    disabled={isSubmitting}
+                    aria-invalid={!!errors.domain}
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    Wpisz nazwę dziedziny, która nie jest wymieniona na liście
+                  </p>
+                </div>
+              )}
 
               {/* Source Text */}
               <div className="space-y-2">
