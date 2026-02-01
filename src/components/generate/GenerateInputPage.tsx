@@ -1,6 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { z } from "zod";
-import type { LanguageCode } from "@/types";
 import { useCreateGenerationRequest } from "@/components/hooks/useCreateGenerationRequest";
 import { useDecksList } from "@/components/hooks/useDecksList";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,7 +27,15 @@ const generateSchema = z.object({
 type GenerateFormData = z.infer<typeof generateSchema>;
 
 export default function GenerateInputPage() {
-  const [domain, setDomain] = useState("");
+  const [domain] = useState(() => {
+    const savedDomain = sessionStorage.getItem("generate_domain");
+    if (!savedDomain) {
+      window.location.href = "/generate/setup";
+      return "";
+    }
+    return savedDomain;
+  });
+
   const [formData, setFormData] = useState<GenerateFormData>({
     source_text: "",
     target_language: "en",
@@ -40,15 +47,6 @@ export default function GenerateInputPage() {
 
   const { createGenerationRequest, isCreating, error: apiError } = useCreateGenerationRequest();
   const { data: decksData } = useDecksList({ include_counts: false });
-
-  useEffect(() => {
-    const savedDomain = sessionStorage.getItem("generate_domain");
-    if (!savedDomain) {
-      window.location.href = "/generate/setup";
-      return;
-    }
-    setDomain(savedDomain);
-  }, []);
 
   const handleInputChange = useCallback(
     (field: keyof GenerateFormData, value: string) => {

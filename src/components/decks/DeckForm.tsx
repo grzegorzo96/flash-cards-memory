@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { z } from "zod";
 import type { DeckDetailsDTO } from "@/types";
 import { useCreateDeck } from "@/components/hooks/useCreateDeck";
@@ -33,22 +33,13 @@ export function DeckForm({ deckId, initialData }: DeckFormProps) {
   const { createDeck, isCreating } = useCreateDeck();
   const { updateDeck, isUpdating } = useUpdateDeck();
 
-  const [formData, setFormData] = useState<DeckFormData>({
+  const [formData, setFormData] = useState<DeckFormData>(() => ({
     name: initialData?.name || "",
     description: initialData?.description || "",
-  });
+  }));
 
   const [errors, setErrors] = useState<Partial<Record<keyof DeckFormData, string>>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (initialData) {
-      setFormData({
-        name: initialData.name,
-        description: initialData.description || "",
-      });
-    }
-  }, [initialData]);
 
   const handleInputChange = useCallback(
     (field: keyof DeckFormData, value: string) => {

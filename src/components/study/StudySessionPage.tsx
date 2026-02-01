@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
-import type { ReviewRating, StudySessionCardDTO } from "@/types";
+import { useState, useCallback, useEffect, useMemo } from "react";
+import type { ReviewRating } from "@/types";
 import { useStudySession } from "@/components/hooks/useStudySession";
 import { useCreateReviewEvent } from "@/components/hooks/useCreateReviewEvent";
 import { useUpdateStudySession } from "@/components/hooks/useUpdateStudySession";
@@ -22,13 +22,7 @@ export default function StudySessionPage({ sessionId }: StudySessionPageProps) {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
-  const [cards, setCards] = useState<StudySessionCardDTO[]>([]);
-
-  useEffect(() => {
-    if (session?.cards) {
-      setCards(session.cards);
-    }
-  }, [session]);
+  const cards = useMemo(() => session?.cards || [], [session?.cards]);
 
   const currentCard = cards[currentIndex];
   const progress = cards.length > 0 ? ((currentIndex + 1) / cards.length) * 100 : 0;

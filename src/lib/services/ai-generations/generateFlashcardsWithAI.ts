@@ -78,8 +78,10 @@ export async function generateFlashcardsWithAI(
       'Jesteś asystentem edukacyjnym. Twórz precyzyjne pytania i odpowiedzi do fiszek. Odpowiadaj zawsze poprawnym formatem JSON.';
 
     // Build user message with instructions
+    const languageInstruction = targetLanguage === 'pl' ? 'w języku polskim' : 'in English';
     const userMessage = `
       Generuj fiszki edukacyjne na podstawie poniższego tekstu (oraz dziedziny: ${domain || 'Ogólna'}).
+      Pytania i odpowiedzi muszą być ${languageInstruction}.
       Zwróć TYLKO czysty JSON w następującym formacie:
       {
         "flashcards": [

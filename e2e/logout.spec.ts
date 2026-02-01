@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { SidebarComponent, MobileNavComponent } from './components';
+import { SidebarComponent } from './components';
 import { LandingPage, LoginPage } from './pages';
 import { loginAsUser, testUsers } from './fixtures/auth.fixtures';
 
