@@ -32,7 +32,8 @@ describe("listDomains", () => {
       { user_id: testUserId, name: "Domain C", created_at: now.toISOString() },
     ];
     
-    await supabase.from("domains").insert(domains);
+    const { error } = await supabase.from("domains").insert(domains);
+    expect(error).toBeNull();
 
     const result = await listDomains(supabase, testUserId);
 
