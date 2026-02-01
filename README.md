@@ -15,7 +15,7 @@
 - [License](#license)
 
 ## Project name
-FlashCardsMemory
+FlashCardsMemory with AI
 
 ## Project description
 FlashCardsMemory is a web application for creating and learning with educational flashcards. It uses AI to generate high-quality flashcards from source text and applies the FSRS (Free Spaced Repetition Scheduler) algorithm to optimize review scheduling. The workflow focuses on fast input, preview and editing, and efficient spaced repetition study sessions.
