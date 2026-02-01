@@ -52,7 +52,7 @@ e2e/
 │   └── auth.fixtures.ts         # Auth helpers for E2E
 ├── helpers/
 │   └── utils.ts                 # E2E test utilities
-└── example.spec.ts              # Example E2E test
+└── logout.spec.ts               # E2E test for logout flow
 ```
 
 ### 4. NPM Scripts Added
@@ -86,9 +86,11 @@ e2e/
 - Async operations
 - Arrange-Act-Assert pattern
 
-**E2E Test Example** (`e2e/example.spec.ts`)
+**E2E Test Example** (`e2e/logout.spec.ts`)
 - Page Object Model usage
-- Navigation tests
+- Component objects
+- Authentication fixtures
+- Complete logout flow testing
 - API testing
 - Visual testing with screenshots
 
