@@ -1,0 +1,10 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import DeckDetailsPage from "@/components/decks/DeckDetailsPage";
+
+const { deckId } = Astro.params;
+---
+
+<Layout title="Szczegóły talii - FlashCardMemory">
+  <DeckDetailsPage deckId={deckId!} client:load />
+</Layout>

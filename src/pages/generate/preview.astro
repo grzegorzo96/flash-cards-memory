@@ -1,0 +1,11 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import GeneratePreviewPage from "@/components/generate/GeneratePreviewPage";
+
+const url = new URL(Astro.request.url);
+const requestId = url.searchParams.get("requestId");
+---
+
+<Layout title="Generuj fiszki - Podgląd - FlashCardMemory">
+  <GeneratePreviewPage requestId={requestId} client:load />
+</Layout>

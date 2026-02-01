@@ -1,0 +1,11 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import GenerateProgressPage from "@/components/generate/GenerateProgressPage";
+
+const url = new URL(Astro.request.url);
+const requestId = url.searchParams.get("requestId");
+---
+
+<Layout title="Generuj fiszki - W toku - FlashCardMemory">
+  <GenerateProgressPage requestId={requestId} client:load />
+</Layout>
