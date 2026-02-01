@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { z } from "zod";
 import { useCreateGenerationRequest } from "@/components/hooks/useCreateGenerationRequest";
 import { useDecksList } from "@/components/hooks/useDecksList";
@@ -27,14 +27,18 @@ const generateSchema = z.object({
 type GenerateFormData = z.infer<typeof generateSchema>;
 
 export default function GenerateInputPage() {
-  const [domain] = useState(() => {
-    const savedDomain = sessionStorage.getItem("generate_domain");
-    if (!savedDomain) {
-      window.location.href = "/generate/setup";
-      return "";
+  const [domain, setDomain] = useState<string>("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedDomain = sessionStorage.getItem("generate_domain");
+      if (!savedDomain) {
+        window.location.href = "/generate/setup";
+      } else {
+        setDomain(savedDomain);
+      }
     }
-    return savedDomain;
-  });
+  }, []);
 
   const [formData, setFormData] = useState<GenerateFormData>({
     source_text: "",

@@ -15,7 +15,7 @@ export function FlashcardPrompt({
 }: FlashcardPromptProps) {
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="scale-in">
         <CardHeader>
           <CardTitle className="text-lg">Pytanie</CardTitle>
         </CardHeader>
@@ -25,13 +25,13 @@ export function FlashcardPrompt({
       </Card>
 
       {!isAnswerVisible ? (
-        <div className="flex justify-center">
-          <Button size="lg" onClick={onShowAnswer}>
+        <div className="flex justify-center fade-in-up" style={{ animationDelay: '0.2s' }}>
+          <Button size="lg" onClick={onShowAnswer} className="hover-glow">
             Pokaż odpowiedź (Spacja)
           </Button>
         </div>
       ) : (
-        <Card className="border-primary">
+        <Card className="border-primary scale-in card-gradient-border">
           <CardHeader>
             <CardTitle className="text-lg">Odpowiedź</CardTitle>
           </CardHeader>

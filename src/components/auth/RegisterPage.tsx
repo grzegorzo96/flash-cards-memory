@@ -104,25 +104,25 @@ export default function RegisterPage({ redirectUrl = '/dashboard' }: RegisterPag
   if (isSuccess) {
     return (
       <main className="container mx-auto flex min-h-screen max-w-md items-center px-4 py-8">
-        <Card className="w-full">
+        <Card className="w-full scale-in">
           <CardHeader>
             <CardTitle className="text-2xl flex items-center gap-2">
               <CheckCircle2 className="h-6 w-6 text-green-600" />
               Konto zostało utworzone!
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-reveal" style={{ animationDelay: '0.1s' }}>
               Sprawdź swoją skrzynkę pocztową
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Alert>
+            <Alert className="fade-in-up" style={{ animationDelay: '0.2s' }}>
               <AlertDescription>
                 Na adres <strong>{registeredEmail}</strong> wysłaliśmy link aktywacyjny.
                 Kliknij w link w emailu, aby aktywować konto.
               </AlertDescription>
             </Alert>
 
-            <Button className="w-full" asChild>
+            <Button className="w-full hover-glow" asChild>
               <a href={`/login${redirectUrl !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectUrl)}` : ''}`}>
                 Wróć do logowania
               </a>
@@ -135,10 +135,10 @@ export default function RegisterPage({ redirectUrl = '/dashboard' }: RegisterPag
 
   return (
     <main className="container mx-auto flex min-h-screen max-w-md items-center px-4 py-8">
-      <Card className="w-full">
+      <Card className="w-full scale-in">
         <CardHeader>
           <CardTitle className="text-2xl">Rejestracja</CardTitle>
-          <CardDescription>
+          <CardDescription className="text-reveal" style={{ animationDelay: '0.1s' }}>
             Utwórz nowe konto FlashCardMemory
           </CardDescription>
         </CardHeader>
@@ -229,14 +229,14 @@ export default function RegisterPage({ redirectUrl = '/dashboard' }: RegisterPag
               )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
+            <Button type="submit" className="w-full hover-glow" disabled={isSubmitting}>
               {isSubmitting ? "Rejestracja..." : "Zarejestruj się"}
             </Button>
 
-            <div className="text-center text-sm">
+            <div className="text-center text-sm fade-in-up" style={{ animationDelay: '0.3s' }}>
               <p>
                 Masz już konto?{" "}
-                <a href={`/login${redirectUrl !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectUrl)}` : ''}`} className="text-primary hover:underline">
+                <a href={`/login${redirectUrl !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectUrl)}` : ''}`} className="text-primary hover:underline transition-all">
                   Zaloguj się
                 </a>
               </p>

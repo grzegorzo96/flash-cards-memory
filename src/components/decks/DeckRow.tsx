@@ -49,7 +49,7 @@ export function DeckRow({
 
   return (
     <TableRow
-      className="cursor-pointer hover:bg-muted/50"
+      className="cursor-pointer hover:bg-muted/50 transition-all duration-300 hover-lift"
       onClick={handleOpen}
     >
       <TableCell className="font-medium">{deck.name}</TableCell>
@@ -57,11 +57,11 @@ export function DeckRow({
         {deck.description || "—"}
       </TableCell>
       <TableCell className="text-center">
-        <Badge variant="secondary">{deck.card_count}</Badge>
+        <Badge variant="secondary" className="scale-in">{deck.card_count}</Badge>
       </TableCell>
       <TableCell className="text-center">
         {deck.due_today_count > 0 ? (
-          <Badge variant="default">{deck.due_today_count}</Badge>
+          <Badge variant="default" className="scale-in">{deck.due_today_count}</Badge>
         ) : (
           <span className="text-muted-foreground">—</span>
         )}
@@ -69,11 +69,11 @@ export function DeckRow({
       <TableCell className="text-right">
         <div className="flex justify-end gap-2">
           {deck.due_today_count > 0 && (
-            <Button size="sm" onClick={handleStartStudy}>
+            <Button size="sm" onClick={handleStartStudy} className="hover-glow">
               Ucz się
             </Button>
           )}
-          <Button size="sm" variant="outline" onClick={handleEdit}>
+          <Button size="sm" variant="outline" onClick={handleEdit} className="hover-lift">
             Edytuj
           </Button>
           <Button size="sm" variant="destructive" onClick={handleDelete}>

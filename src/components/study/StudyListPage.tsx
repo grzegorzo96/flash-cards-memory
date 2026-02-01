@@ -74,7 +74,7 @@ export default function StudyListPage() {
   }
 
   const decks = data?.items || [];
-  const decksWithCards = decks.filter((deck) => (deck.flashcard_count || 0) > 0);
+  const decksWithCards = decks.filter((deck) => (deck.card_count || 0) > 0);
 
   return (
     <main className="container mx-auto px-4 py-8 max-w-6xl">
@@ -128,7 +128,7 @@ export default function StudyListPage() {
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-1">
                     <BookOpen className="h-4 w-4" />
-                    <span>{deck.flashcard_count || 0} fiszek</span>
+                    <span>{deck.card_count || 0} fiszek</span>
                   </div>
                 </div>
 

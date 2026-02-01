@@ -94,10 +94,10 @@ export default function LoginPage({ redirectUrl = "/dashboard" }: LoginPageProps
 
   return (
     <main className="container mx-auto flex min-h-screen max-w-md items-center px-4 py-8">
-      <Card className="w-full" data-testid="login-card">
+      <Card className="w-full scale-in" data-testid="login-card">
         <CardHeader>
           <CardTitle className="text-2xl">Logowanie</CardTitle>
-          <CardDescription>
+          <CardDescription className="text-reveal" style={{ animationDelay: '0.1s' }}>
             Zaloguj się do swojego konta FlashCardMemory
           </CardDescription>
         </CardHeader>
@@ -163,25 +163,25 @@ export default function LoginPage({ redirectUrl = "/dashboard" }: LoginPageProps
 
             <Button 
               type="submit" 
-              className="w-full" 
+              className="w-full hover-glow" 
               disabled={isSubmitting}
               data-testid="login-submit-button"
             >
               {isSubmitting ? "Logowanie..." : "Zaloguj się"}
             </Button>
 
-            <div className="space-y-2 text-center text-sm">
+            <div className="space-y-2 text-center text-sm fade-in-up" style={{ animationDelay: '0.3s' }}>
               <p>
                 <a
                   href="/reset-password"
-                  className="text-primary hover:underline"
+                  className="text-primary hover:underline transition-all"
                 >
                   Zapomniałeś hasła?
                 </a>
               </p>
               <p>
                 Nie masz konta?{" "}
-                <a href="/register" className="text-primary hover:underline">
+                <a href="/register" className="text-primary hover:underline transition-all">
                   Zarejestruj się
                 </a>
               </p>

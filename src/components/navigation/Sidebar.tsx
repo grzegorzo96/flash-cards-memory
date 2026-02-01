@@ -30,7 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({ user }) => {
 
   return (
     <div 
-      className="fixed left-0 top-0 h-full w-64 border-r bg-background flex flex-col"
+      className="h-full w-64 border-r bg-background flex flex-col"
       data-testid="sidebar"
     >
       {/* Header with Logo */}
