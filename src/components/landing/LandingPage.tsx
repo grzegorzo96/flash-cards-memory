@@ -111,10 +111,10 @@ export default function LandingPage() {
   const charCount = formData.source_text.length;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" data-testid="landing-page">
       <Navigation isGuest={true} />
 
-      <main className="container mx-auto max-w-4xl px-4 py-12">
+      <main className="container mx-auto max-w-4xl px-4 py-12" data-testid="landing-main">
         {/* Hero Section */}
         <header className="mb-12 text-center">
           <h1 className="text-5xl font-bold tracking-tight mb-4">

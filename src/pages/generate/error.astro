@@ -1,8 +1,8 @@
 ---
-import Layout from "@/layouts/Layout.astro";
+import AppLayout from "@/layouts/AppLayout.astro";
 import GenerateErrorPage from "@/components/generate/GenerateErrorPage";
 ---
 
-<Layout title="Generuj fiszki - Błąd - FlashCardMemory">
+<AppLayout title="Generuj fiszki - Błąd - FlashCardMemory" user={Astro.locals.user}>
   <GenerateErrorPage client:load />
-</Layout>
+</AppLayout>

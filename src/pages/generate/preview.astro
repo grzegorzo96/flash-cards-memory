@@ -1,5 +1,5 @@
 ---
-import Layout from "@/layouts/Layout.astro";
+import AppLayout from "@/layouts/AppLayout.astro";
 import GeneratePreviewPage from "@/components/generate/GeneratePreviewPage";
 
 const url = new URL(Astro.request.url);
@@ -7,6 +7,6 @@ const requestId = url.searchParams.get("requestId");
 const isGuest = !Astro.locals.user;
 ---
 
-<Layout title="Generuj fiszki - Podgląd - FlashCardMemory">
+<AppLayout title="Generuj fiszki - Podgląd - FlashCardMemory" user={Astro.locals.user}>
   <GeneratePreviewPage requestId={requestId} isGuest={isGuest} client:load />
-</Layout>
+</AppLayout>

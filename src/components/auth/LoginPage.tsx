@@ -96,7 +96,7 @@ export default function LoginPage({ redirectUrl = "/dashboard" }: LoginPageProps
 
   return (
     <main className="container mx-auto flex min-h-screen max-w-md items-center px-4 py-8">
-      <Card className="w-full">
+      <Card className="w-full" data-testid="login-card">
         <CardHeader>
           <CardTitle className="text-2xl">Logowanie</CardTitle>
           <CardDescription>
@@ -104,7 +104,7 @@ export default function LoginPage({ redirectUrl = "/dashboard" }: LoginPageProps
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" data-testid="login-form">
             {errors.general && (
               <Alert variant="destructive">
                 <AlertDescription>{errors.general}</AlertDescription>
@@ -122,6 +122,7 @@ export default function LoginPage({ redirectUrl = "/dashboard" }: LoginPageProps
                 disabled={isSubmitting}
                 aria-invalid={!!errors.email}
                 aria-describedby={errors.email ? "email-error" : undefined}
+                data-testid="email-input"
               />
               {errors.email && (
                 <p id="email-error" className="text-sm text-destructive">
@@ -143,12 +144,14 @@ export default function LoginPage({ redirectUrl = "/dashboard" }: LoginPageProps
                   aria-invalid={!!errors.password}
                   aria-describedby={errors.password ? "password-error" : undefined}
                   className="pr-10"
+                  data-testid="password-input"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                   aria-label={showPassword ? "Ukryj hasło" : "Pokaż hasło"}
+                  data-testid="toggle-password-visibility"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -160,7 +163,12 @@ export default function LoginPage({ redirectUrl = "/dashboard" }: LoginPageProps
               )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
+            <Button 
+              type="submit" 
+              className="w-full" 
+              disabled={isSubmitting}
+              data-testid="login-submit-button"
+            >
               {isSubmitting ? "Logowanie..." : "Zaloguj się"}
             </Button>
 

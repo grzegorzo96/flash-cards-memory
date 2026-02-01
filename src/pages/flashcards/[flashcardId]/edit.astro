@@ -1,10 +1,10 @@
 ---
-import Layout from "@/layouts/Layout.astro";
+import AppLayout from "@/layouts/AppLayout.astro";
 import FlashcardFormPage from "@/components/flashcards/FlashcardFormPage";
 
 const { flashcardId } = Astro.params;
 ---
 
-<Layout title="Edytuj fiszkę - FlashCardMemory">
+<AppLayout title="Edytuj fiszkę - FlashCardMemory" user={Astro.locals.user}>
   <FlashcardFormPage flashcardId={flashcardId} client:load />
-</Layout>
+</AppLayout>
