@@ -18,16 +18,19 @@ import {
 } from "@/components/ui/select";
 import { PreviewCardItem } from "./PreviewCardItem";
 import { ErrorBanner } from "../dashboard/ErrorBanner";
+import { AuthRequiredDialog } from "./AuthRequiredDialog";
 
 type GeneratePreviewPageProps = {
   requestId: string | null;
+  isGuest?: boolean;
 };
 
 export default function GeneratePreviewPage({
   requestId,
+  isGuest = false,
 }: GeneratePreviewPageProps) {
   const { data: generationData, isLoading, error } = useGenerationStatus(requestId, false);
-  const { data: decksData } = useDecksList({ include_counts: false });
+  const { data: decksData, refetch: refetchDecks } = useDecksList({ include_counts: false });
   const { acceptCards, isAccepting } = useAcceptGeneratedCards();
   const { createDeck, isCreating } = useCreateDeck();
 
@@ -36,6 +39,7 @@ export default function GeneratePreviewPage({
   const [newDeckName, setNewDeckName] = useState("");
   const [showNewDeckForm, setShowNewDeckForm] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
 
   useEffect(() => {
     if (!requestId) {
@@ -48,6 +52,20 @@ export default function GeneratePreviewPage({
       setCards(generationData.preview_cards);
     }
   }, [generationData]);
+
+  // Restore edited cards from sessionStorage after login
+  useEffect(() => {
+    const savedCards = sessionStorage.getItem('guest_edited_cards');
+    if (savedCards && !isGuest && cards.length === 0) {
+      try {
+        const parsedCards = JSON.parse(savedCards);
+        setCards(parsedCards);
+        sessionStorage.removeItem('guest_edited_cards');
+      } catch (e) {
+        console.error('Failed to restore guest cards:', e);
+      }
+    }
+  }, [isGuest, cards.length]);
 
   const handleCardEdit = useCallback(
     (index: number, field: "question" | "answer", value: string) => {
@@ -72,10 +90,18 @@ export default function GeneratePreviewPage({
       setDeckId(result.id);
       setShowNewDeckForm(false);
       setNewDeckName("");
+      await refetchDecks();
     }
-  }, [newDeckName, createDeck]);
+  }, [newDeckName, createDeck, refetchDecks]);
 
   const handleAcceptCards = useCallback(async () => {
+    // If guest, save cards to sessionStorage and show auth dialog
+    if (isGuest) {
+      sessionStorage.setItem('guest_edited_cards', JSON.stringify(cards));
+      setShowAuthDialog(true);
+      return;
+    }
+
     if (!requestId || !deckId || cards.length === 0) {
       setSubmitError("Wybierz talię i upewnij się, że masz przynajmniej jedną fiszkę");
       return;
@@ -104,7 +130,7 @@ export default function GeneratePreviewPage({
     } else {
       setSubmitError("Nie udało się zapisać fiszek. Spróbuj ponownie.");
     }
-  }, [requestId, deckId, cards, acceptCards]);
+  }, [isGuest, requestId, deckId, cards, acceptCards]);
 
   if (!requestId) {
     return null;
@@ -143,63 +169,65 @@ export default function GeneratePreviewPage({
         </Alert>
       )}
 
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Wybierz talię</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {!showNewDeckForm ? (
-            <>
-              <div className="space-y-2">
-                <Label htmlFor="deck-select">Talia</Label>
-                <Select value={deckId} onValueChange={setDeckId}>
-                  <SelectTrigger id="deck-select">
-                    <SelectValue placeholder="Wybierz talię" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {decksData?.items.map((deck) => (
-                      <SelectItem key={deck.id} value={deck.id}>
-                        {deck.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <Button
-                variant="outline"
-                onClick={() => setShowNewDeckForm(true)}
-              >
-                Utwórz nową talię
-              </Button>
-            </>
-          ) : (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="new-deck-name">Nazwa nowej talii</Label>
-                <Input
-                  id="new-deck-name"
-                  value={newDeckName}
-                  onChange={(e) => setNewDeckName(e.target.value)}
-                  placeholder="Nazwa talii..."
-                  disabled={isCreating}
-                />
-              </div>
-              <div className="flex gap-2">
-                <Button onClick={handleCreateNewDeck} disabled={isCreating}>
-                  {isCreating ? "Tworzenie..." : "Utwórz"}
-                </Button>
+      {!isGuest && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Wybierz talię</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {!showNewDeckForm ? (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="deck-select">Talia</Label>
+                  <Select value={deckId} onValueChange={setDeckId}>
+                    <SelectTrigger id="deck-select">
+                      <SelectValue placeholder="Wybierz talię" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {decksData?.items.map((deck) => (
+                        <SelectItem key={deck.id} value={deck.id}>
+                          {deck.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 <Button
                   variant="outline"
-                  onClick={() => setShowNewDeckForm(false)}
-                  disabled={isCreating}
+                  onClick={() => setShowNewDeckForm(true)}
                 >
-                  Anuluj
+                  Utwórz nową talię
                 </Button>
+              </>
+            ) : (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="new-deck-name">Nazwa nowej talii</Label>
+                  <Input
+                    id="new-deck-name"
+                    value={newDeckName}
+                    onChange={(e) => setNewDeckName(e.target.value)}
+                    placeholder="Nazwa talii..."
+                    disabled={isCreating}
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button onClick={handleCreateNewDeck} disabled={isCreating}>
+                    {isCreating ? "Tworzenie..." : "Utwórz"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowNewDeckForm(false)}
+                    disabled={isCreating}
+                  >
+                    Anuluj
+                  </Button>
+                </div>
               </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <div className="mb-6 space-y-4">
         <h2 className="text-2xl font-semibold">
@@ -229,18 +257,24 @@ export default function GeneratePreviewPage({
       <div className="flex gap-3">
         <Button
           onClick={handleAcceptCards}
-          disabled={isAccepting || cards.length === 0 || !deckId}
+          disabled={isAccepting || cards.length === 0 || (!isGuest && !deckId)}
         >
-          {isAccepting ? "Zapisywanie..." : "Zapisz fiszki"}
+          {isAccepting ? "Zapisywanie..." : isGuest ? "Zapisz fiszki (wymagane logowanie)" : "Zapisz fiszki"}
         </Button>
         <Button
           variant="outline"
-          onClick={() => (window.location.href = "/generate/input")}
+          onClick={() => (window.location.href = isGuest ? "/" : "/generate/input")}
           disabled={isAccepting}
         >
           Anuluj
         </Button>
       </div>
+
+      <AuthRequiredDialog
+        isOpen={showAuthDialog}
+        onClose={() => setShowAuthDialog(false)}
+        redirectUrl={`/generate/preview?requestId=${requestId}`}
+      />
     </main>
   );
 }

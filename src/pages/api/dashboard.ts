@@ -1,6 +1,5 @@
 import type { APIRoute } from 'astro';
 
-import { getOrCreateUserId } from '../../lib/helpers/userId';
 import {
   getDashboardOverview,
   GetDashboardOverviewServiceError,
@@ -14,6 +13,7 @@ export const prerender = false;
  * Retrieves dashboard overview with deck statistics and due cards count.
  *
  * @returns 200 OK with DashboardResponseDTO
+ * @returns 401 Unauthorized if user is not authenticated
  * @returns 500 Internal Server Error for unexpected errors
  */
 export const GET: APIRoute = async (context) => {
@@ -31,8 +31,17 @@ export const GET: APIRoute = async (context) => {
       );
     }
 
-    // Get or create anonymous user ID from cookies
-    const userId = getOrCreateUserId(context.cookies);
+    // Get authenticated user ID
+    const userId = context.locals.user?.id;
+    if (!userId) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
 
     // Retrieve dashboard overview using service layer
     const overview = await getDashboardOverview(supabase, userId);

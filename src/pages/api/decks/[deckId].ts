@@ -1,7 +1,6 @@
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
 
-import { getOrCreateUserId } from '../../../lib/helpers/userId';
 import { deleteDeck, DeleteDeckServiceError } from '../../../lib/services/decks/deleteDeck';
 import { getDeck, GetDeckServiceError } from '../../../lib/services/decks/getDeck';
 import { updateDeck, UpdateDeckServiceError } from '../../../lib/services/decks/updateDeck';
@@ -88,7 +87,16 @@ export const GET: APIRoute = async (context) => {
     }
 
     // Get or create anonymous user ID from cookies
-    const userId = getOrCreateUserId(context.cookies);
+    const userId = context.locals.user?.id;
+    if (!userId) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
 
     // Retrieve deck using service layer
     const deck = await getDeck(supabase, userId, validationResult.data);
@@ -221,7 +229,16 @@ export const PATCH: APIRoute = async (context) => {
     }
 
     // Get or create anonymous user ID from cookies
-    const userId = getOrCreateUserId(context.cookies);
+    const userId = context.locals.user?.id;
+    if (!userId) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
 
     // Update deck using service layer
     const deck = await updateDeck(supabase, userId, deckIdValidation.data, command);
@@ -347,7 +364,16 @@ export const DELETE: APIRoute = async (context) => {
     }
 
     // Get or create anonymous user ID from cookies
-    const userId = getOrCreateUserId(context.cookies);
+    const userId = context.locals.user?.id;
+    if (!userId) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
 
     // Delete deck using service layer
     await deleteDeck(supabase, userId, validationResult.data);

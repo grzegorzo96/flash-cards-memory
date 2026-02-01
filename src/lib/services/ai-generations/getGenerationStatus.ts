@@ -23,24 +23,30 @@ export class GetGenerationStatusServiceError extends Error {
  * Retrieves the status and preview cards for a generation request.
  *
  * @param supabase - Supabase client instance
- * @param userId - User ID to filter by
+ * @param userId - User ID to filter by (null for guest users)
  * @param requestId - Generation request ID to retrieve
  * @returns Generation request status and preview cards
  * @throws {GetGenerationStatusServiceError} If request is not found or retrieval fails
  */
 export async function getGenerationStatus(
   supabase: SupabaseClient,
-  userId: string,
+  userId: string | null,
   requestId: string
 ): Promise<GenerationRequestStatusResponseDTO> {
   try {
-    // Fetch the generation request
-    const { data: request, error } = await supabase
+    // Build query - for guests (userId is null), only filter by requestId
+    // The requestId itself acts as a secret token for guest access
+    let query = supabase
       .from('generation_requests')
-      .select('id, status, error_code, error_message')
-      .eq('id', requestId)
-      .eq('user_id', userId)
-      .single();
+      .select('id, status, error_code, error_message, user_id')
+      .eq('id', requestId);
+
+    // If user is authenticated, also verify ownership
+    if (userId) {
+      query = query.eq('user_id', userId);
+    }
+
+    const { data: request, error } = await query.single();
 
     if (error) {
       console.error('Database error retrieving generation request:', {

@@ -4,8 +4,9 @@ import GeneratePreviewPage from "@/components/generate/GeneratePreviewPage";
 
 const url = new URL(Astro.request.url);
 const requestId = url.searchParams.get("requestId");
+const isGuest = !Astro.locals.user;
 ---
 
 <Layout title="Generuj fiszki - Podgląd - FlashCardMemory">
-  <GeneratePreviewPage requestId={requestId} client:load />
+  <GeneratePreviewPage requestId={requestId} isGuest={isGuest} client:load />
 </Layout>

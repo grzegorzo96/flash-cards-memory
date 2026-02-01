@@ -1,7 +1,6 @@
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
 
-import { getOrCreateUserId } from '../../../lib/helpers/userId';
 import { createDeck, DeckServiceError } from '../../../lib/services/decks/createDeck';
 import { listDecks, ListDecksServiceError } from '../../../lib/services/decks/listDecks';
 import type {
@@ -47,6 +46,7 @@ const DeckListQuerySchema = z.object({
  *
  * @returns 200 OK with DeckListResponseDTO
  * @returns 400 Bad Request if query parameters are invalid
+ * @returns 401 Unauthorized if user is not authenticated
  * @returns 500 Internal Server Error for unexpected errors
  */
 export const GET: APIRoute = async (context) => {
@@ -91,8 +91,17 @@ export const GET: APIRoute = async (context) => {
       );
     }
 
-    // Get or create anonymous user ID from cookies
-    const userId = getOrCreateUserId(context.cookies);
+    // Get authenticated user ID
+    const userId = context.locals.user?.id;
+    if (!userId) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
 
     // List decks using service layer
     const result = await listDecks(supabase, userId, query);
@@ -140,6 +149,7 @@ export const GET: APIRoute = async (context) => {
  *
  * @returns 201 Created with DeckDetailsDTO
  * @returns 400 Bad Request if validation fails
+ * @returns 401 Unauthorized if user is not authenticated
  * @returns 409 Conflict if deck name already exists for user
  * @returns 500 Internal Server Error for unexpected errors
  */
@@ -177,8 +187,17 @@ export const POST: APIRoute = async (context) => {
       );
     }
 
-    // Get or create anonymous user ID from cookies
-    const userId = getOrCreateUserId(context.cookies);
+    // Get authenticated user ID
+    const userId = context.locals.user?.id;
+    if (!userId) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
 
     // Create deck using service layer
     const deck = await createDeck(supabase, userId, command);

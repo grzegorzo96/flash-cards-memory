@@ -1,4 +1,13 @@
 ---
-// Redirect to dashboard as the main entry point
-return Astro.redirect('/dashboard');
+import Layout from '@/layouts/Layout.astro';
+import LandingPage from '@/components/landing/LandingPage';
+
+// Redirect authenticated users to dashboard
+if (Astro.locals.user) {
+  return Astro.redirect('/dashboard');
+}
 ---
+
+<Layout title="FlashCardsMemory - Generuj fiszki z AI">
+  <LandingPage client:load />
+</Layout>

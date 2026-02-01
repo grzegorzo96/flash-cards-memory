@@ -374,7 +374,7 @@ export class OpenRouterService {
           'Authorization': `Bearer ${this.apiKey}`,
           'Content-Type': 'application/json',
           'HTTP-Referer': 'http://localhost:4321',
-          'X-Title': '10xCards',
+          'X-Title': 'FlashCardsMemory',
         },
         body: JSON.stringify(payload),
         signal: controller.signal,
