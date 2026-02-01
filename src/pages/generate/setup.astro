@@ -4,5 +4,5 @@ import GenerateSetupPage from "@/components/generate/GenerateSetupPage";
 ---
 
 <AppLayout title="Generuj fiszki - Ustawienia - FlashCardMemory" user={Astro.locals.user}>
-  <GenerateSetupPage client:load />
+  <GenerateSetupPage client:load isAuthenticated={!!Astro.locals.user} />
 </AppLayout>

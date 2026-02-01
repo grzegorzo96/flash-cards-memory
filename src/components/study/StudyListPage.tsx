@@ -74,7 +74,7 @@ export default function StudyListPage() {
   }
 
   const decks = data?.items || [];
-  const decksWithCards = decks.filter((deck) => (deck.flashcard_count || 0) > 0);
+  const decksWithDueCards = decks.filter((deck) => (deck.due_today_count || 0) > 0);
 
   return (
     <main className="container mx-auto px-4 py-8 max-w-6xl">
@@ -88,22 +88,24 @@ export default function StudyListPage() {
         </p>
       </div>
 
-      {decksWithCards.length === 0 ? (
+      {decksWithDueCards.length === 0 ? (
         <Card>
           <CardContent className="py-16 text-center">
             <BookOpen className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-            <h2 className="text-2xl font-semibold">Brak talii z fiszkami</h2>
+            <h2 className="text-2xl font-semibold">Brak fiszek do powtórki</h2>
             <p className="mt-2 text-muted-foreground">
-              Utwórz talię i dodaj fiszki, aby rozpocząć naukę
+              {decks.length === 0
+                ? 'Utwórz talię i dodaj fiszki, aby rozpocząć naukę'
+                : 'Świetna robota! Wszystkie fiszki są na bieżąco. Wróć później lub dodaj nowe fiszki.'}
             </p>
             <Button className="mt-6" asChild>
-              <a href="/decks/new">Utwórz pierwszą talię</a>
+              <a href="/decks">{decks.length === 0 ? 'Utwórz pierwszą talię' : 'Przejdź do talii'}</a>
             </Button>
           </CardContent>
         </Card>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {decksWithCards.map((deck) => (
+          {decksWithDueCards.map((deck) => (
             <Card
               key={deck.id}
               className="hover:shadow-lg transition-shadow"
@@ -125,11 +127,17 @@ export default function StudyListPage() {
                   </p>
                 )}
 
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
+                <div className="flex items-center gap-4 text-sm">
+                  <div className="flex items-center gap-1 text-muted-foreground">
                     <BookOpen className="h-4 w-4" />
-                    <span>{deck.flashcard_count || 0} fiszek</span>
+                    <span>{deck.card_count || 0} fiszek</span>
                   </div>
+                  {deck.due_today_count > 0 && (
+                    <Badge variant="default" className="gap-1">
+                      <Clock className="h-3 w-3" />
+                      {deck.due_today_count} do powtórki
+                    </Badge>
+                  )}
                 </div>
 
                 <Button

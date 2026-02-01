@@ -119,13 +119,13 @@ export async function listDecks(
         );
       }
 
-      // Get due today counts
+      // Get due today counts (includes cards with next_due_at <= today OR next_due_at IS NULL)
       const { data: dueCounts, error: dueCountError } = await supabase
         .from('flashcards')
         .select('deck_id')
         .in('deck_id', deckIds)
         .is('deleted_at', null)
-        .lte('next_due_at', today);
+        .or(`next_due_at.lte.${today},next_due_at.is.null`);
 
       if (dueCountError) {
         console.error('Error fetching due counts:', dueCountError);
