@@ -22,21 +22,25 @@ const { title = 'FlashCardsMemory', user } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
-    <div class="flex h-screen">
-      <!-- Desktop Sidebar (hidden on mobile) -->
-      <div class="hidden lg:block">
-        <Sidebar client:load user={user} />
-      </div>
+    <div class="flex h-screen overflow-hidden">
+      {user && (
+        <>
+          <!-- Desktop Sidebar (hidden on mobile) -->
+          <aside class="hidden lg:block lg:w-64 flex-shrink-0">
+            <Sidebar client:load user={user} />
+          </aside>
 
-      <!-- Mobile Top Bar -->
-      <div
-        class="lg:hidden fixed top-0 left-0 right-0 z-50 bg-background border-b"
-      >
-        <MobileNav client:load user={user} />
-      </div>
+          <!-- Mobile Top Bar -->
+          <div
+            class="lg:hidden fixed top-0 left-0 right-0 z-50 bg-background border-b"
+          >
+            <MobileNav client:load user={user} />
+          </div>
+        </>
+      )}
 
       <!-- Main Content Area -->
-      <main class="flex-1 overflow-y-auto pt-16 lg:pt-0 lg:ml-0">
+      <main class={`flex-1 overflow-y-auto ${user ? 'pt-16 lg:pt-0' : ''}`}>
         <slot />
       </main>
     </div>

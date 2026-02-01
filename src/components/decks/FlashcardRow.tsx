@@ -60,7 +60,7 @@ export function FlashcardRow({
 
   return (
     <TableRow
-      className="cursor-pointer hover:bg-muted/50"
+      className="cursor-pointer hover:bg-muted/50 transition-all duration-300 hover-lift"
       onClick={handleOpen}
     >
       <TableCell className="max-w-xs truncate font-medium">
@@ -70,7 +70,7 @@ export function FlashcardRow({
         {flashcard.answer}
       </TableCell>
       <TableCell className="text-center">
-        <Badge variant={flashcard.source === "ai_generated" ? "default" : "secondary"}>
+        <Badge variant={flashcard.source === "ai_generated" ? "default" : "secondary"} className="scale-in">
           {getSourceLabel(flashcard.source)}
         </Badge>
       </TableCell>
@@ -79,7 +79,7 @@ export function FlashcardRow({
       </TableCell>
       <TableCell className="text-right">
         <div className="flex justify-end gap-2">
-          <Button size="sm" variant="outline" onClick={handleEdit}>
+          <Button size="sm" variant="outline" onClick={handleEdit} className="hover-lift">
             Edytuj
           </Button>
           <Button size="sm" variant="destructive" onClick={handleDelete}>

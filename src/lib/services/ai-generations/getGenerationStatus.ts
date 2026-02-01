@@ -34,19 +34,13 @@ export async function getGenerationStatus(
   requestId: string
 ): Promise<GenerationRequestStatusResponseDTO> {
   try {
-    // Build query - for guests (userId is null), only filter by requestId
+    // Build query - first fetch the request by ID only
     // The requestId itself acts as a secret token for guest access
-    let query = supabase
+    const { data: request, error } = await supabase
       .from('generation_requests')
-      .select('id, status, error_code, error_message, user_id')
-      .eq('id', requestId);
-
-    // If user is authenticated, also verify ownership
-    if (userId) {
-      query = query.eq('user_id', userId);
-    }
-
-    const { data: request, error } = await query.single();
+      .select('id, status, error_code, error_message, user_id, deck_id')
+      .eq('id', requestId)
+      .single();
 
     if (error) {
       console.error('Database error retrieving generation request:', {
@@ -78,6 +72,16 @@ export async function getGenerationStatus(
       );
     }
 
+    // Verify ownership for non-guest requests
+    // If the request was created by a guest (user_id is null), allow anyone with the requestId to access it
+    // If the request has a user_id, only that user can access it
+    if (request.user_id !== null && userId !== request.user_id) {
+      throw new GetGenerationStatusServiceError(
+        `Generation request with ID "${requestId}" not found`,
+        'NOT_FOUND'
+      );
+    }
+
     // Fetch preview cards from temporary storage
     let previewCards: PreviewCardDTO[] = [];
 
@@ -103,6 +107,7 @@ export async function getGenerationStatus(
       status: request.status,
       error_code: request.error_code,
       error_message: request.error_message,
+      deck_id: request.deck_id,
       preview_cards: previewCards,
     };
   } catch (error) {

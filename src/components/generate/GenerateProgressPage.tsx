@@ -48,16 +48,16 @@ export default function GenerateProgressPage({
 
   return (
     <main className="container mx-auto max-w-2xl px-4 py-8">
-      <header className="mb-8">
+      <header className="mb-8 fade-in-up">
         <h1 className="text-4xl font-bold tracking-tight">
           Generowanie fiszek
         </h1>
-        <p className="mt-2 text-muted-foreground">
+        <p className="mt-2 text-muted-foreground text-reveal" style={{ animationDelay: '0.2s' }}>
           Proszę czekać, trwa generowanie fiszek...
         </p>
       </header>
 
-      <Card>
+      <Card className="scale-in" style={{ animationDelay: '0.3s' }}>
         <CardHeader>
           <CardTitle>Status generowania</CardTitle>
         </CardHeader>
@@ -76,8 +76,8 @@ export default function GenerateProgressPage({
 
           {isLoading && !data && (
             <div className="space-y-2">
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-full shimmer" />
+              <Skeleton className="h-4 w-3/4 shimmer" />
             </div>
           )}
 
@@ -85,6 +85,7 @@ export default function GenerateProgressPage({
             <Button
               variant="outline"
               onClick={() => (window.location.href = "/generate/input")}
+              className="hover-lift"
             >
               Anuluj
             </Button>
