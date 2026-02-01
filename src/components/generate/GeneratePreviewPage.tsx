@@ -71,6 +71,13 @@ export default function GeneratePreviewPage({
     }
   }, [requestId]);
 
+  // Set deckId from generationData when available
+  useEffect(() => {
+    if (generationData?.deck_id && !deckId) {
+      setDeckId(generationData.deck_id);
+    }
+  }, [generationData?.deck_id, deckId]);
+
   const handleCardEdit = useCallback(
     (index: number, field: "question" | "answer", value: string) => {
       setCards((prev) =>

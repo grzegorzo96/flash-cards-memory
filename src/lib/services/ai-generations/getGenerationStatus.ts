@@ -38,7 +38,7 @@ export async function getGenerationStatus(
     // The requestId itself acts as a secret token for guest access
     let query = supabase
       .from('generation_requests')
-      .select('id, status, error_code, error_message, user_id')
+      .select('id, status, error_code, error_message, user_id, deck_id')
       .eq('id', requestId);
 
     // If user is authenticated, also verify ownership
@@ -103,6 +103,7 @@ export async function getGenerationStatus(
       status: request.status,
       error_code: request.error_code,
       error_message: request.error_message,
+      deck_id: request.deck_id,
       preview_cards: previewCards,
     };
   } catch (error) {

@@ -125,7 +125,7 @@ export type PreviewCardDTO = Pick<Flashcard, "question" | "answer" | "source">;
 
 export type GenerationRequestStatusResponseDTO = Pick<
   GenerationRequest,
-  "id" | "status" | "error_code" | "error_message"
+  "id" | "status" | "error_code" | "error_message" | "deck_id"
 > & {
   preview_cards: PreviewCardDTO[];
 };
