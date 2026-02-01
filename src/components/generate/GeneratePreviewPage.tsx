@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import type { PreviewCardDTO, AcceptedCardInputDTO } from "@/types";
 import { useGenerationStatus } from "@/components/hooks/useGenerationStatus";
 import { useAcceptGeneratedCards } from "@/components/hooks/useAcceptGeneratedCards";
@@ -34,32 +34,41 @@ export default function GeneratePreviewPage({
   const { acceptCards, isAccepting } = useAcceptGeneratedCards();
   const { createDeck, isCreating } = useCreateDeck();
 
-  const [cards, setCards] = useState<PreviewCardDTO[]>(generationData?.preview_cards || []);
+  const [cards, setCards] = useState<PreviewCardDTO[]>([]);
+  const cardsInitialized = useRef(false);
 
-  // Update cards when generationData loads
+  // Update cards when generationData loads or restore from sessionStorage
   useEffect(() => {
-    if (generationData?.preview_cards && cards.length === 0) {
-      setCards(generationData.preview_cards);
-    }
-  }, [generationData?.preview_cards, cards.length]);
+    if (cardsInitialized.current) return;
 
-  // Try to restore edited cards from sessionStorage on mount (for logged-in users)
-  useEffect(() => {
+    // First, try to restore edited cards from sessionStorage (for logged-in users)
     if (!isGuest && typeof window !== "undefined") {
       const savedCards = sessionStorage.getItem('guest_edited_cards');
       if (savedCards) {
         try {
           const parsedCards = JSON.parse(savedCards);
           sessionStorage.removeItem('guest_edited_cards');
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setCards(parsedCards);
+          cardsInitialized.current = true;
+          return;
         } catch (e) {
           console.error('Failed to restore guest cards:', e);
         }
       }
     }
-  }, [isGuest]);
 
-  const [deckId, setDeckId] = useState<string>("");
+    // Otherwise, use cards from generationData
+    if (generationData?.preview_cards && cards.length === 0) {
+      setCards(generationData.preview_cards);
+      cardsInitialized.current = true;
+    }
+  }, [generationData?.preview_cards, cards.length, isGuest]);
+
+  const [deckId, setDeckId] = useState<string>(() => {
+    return "";
+  });
+  const deckIdInitialized = useRef(false);
   const [newDeckName, setNewDeckName] = useState("");
   const [showNewDeckForm, setShowNewDeckForm] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -73,8 +82,11 @@ export default function GeneratePreviewPage({
 
   // Set deckId from generationData when available
   useEffect(() => {
+    if (deckIdInitialized.current) return;
     if (generationData?.deck_id && !deckId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDeckId(generationData.deck_id);
+      deckIdInitialized.current = true;
     }
   }, [generationData?.deck_id, deckId]);
 
