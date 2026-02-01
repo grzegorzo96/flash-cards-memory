@@ -119,8 +119,7 @@ export async function createReviewEvent(
     const fsrsResult = calculateNextReview(
       command.rating as FSRSRating,
       flashcard.stability,
-      flashcard.difficulty,
-      flashcard.last_reviewed_at ? new Date(flashcard.last_reviewed_at) : null
+      flashcard.difficulty
     );
 
     const now = new Date().toISOString();

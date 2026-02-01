@@ -61,12 +61,12 @@ export async function acceptGeneratedCards(
       );
     }
 
-    // Verify the generation request exists and belongs to the user
+    // Verify the generation request exists
+    // First fetch without user_id filter to allow access to guest-created requests
     const { data: existingRequest, error: requestError } = await supabase
       .from('generation_requests')
-      .select('id')
+      .select('id, user_id')
       .eq('id', requestId)
-      .eq('user_id', userId)
       .single();
 
     if (requestError) {
@@ -96,6 +96,38 @@ export async function acceptGeneratedCards(
         `Generation request with ID "${requestId}" not found`,
         'REQUEST_NOT_FOUND'
       );
+    }
+
+    // Verify ownership - only allow accepting cards if:
+    // 1. The request was created by a guest (user_id is null), OR
+    // 2. The request belongs to the current user
+    if (existingRequest.user_id !== null && existingRequest.user_id !== userId) {
+      throw new AcceptGeneratedCardsServiceError(
+        `Generation request with ID "${requestId}" not found`,
+        'REQUEST_NOT_FOUND'
+      );
+    }
+
+    // If the request was created by a guest, assign it to the current user
+    if (existingRequest.user_id === null) {
+      const { error: updateError } = await supabase
+        .from('generation_requests')
+        .update({ user_id: userId })
+        .eq('id', requestId);
+
+      if (updateError) {
+        console.error('Failed to update generation request user_id:', {
+          requestId,
+          userId,
+          error: updateError,
+        });
+        // Don't throw error here - it's not critical if this fails
+      } else {
+        console.log('Assigned guest generation request to user:', {
+          requestId,
+          userId,
+        });
+      }
     }
 
     // Verify the deck exists and belongs to the user
