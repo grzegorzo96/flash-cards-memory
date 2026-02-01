@@ -1,0 +1,11 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import FlashcardFormPage from "@/components/flashcards/FlashcardFormPage";
+
+const url = new URL(Astro.request.url);
+const deckId = url.searchParams.get("deckId");
+---
+
+<Layout title="Utwórz fiszkę - FlashCardMemory">
+  <FlashcardFormPage deckId={deckId} client:load />
+</Layout>

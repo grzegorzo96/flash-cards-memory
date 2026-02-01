@@ -1,0 +1,10 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import StudySessionPage from "@/components/study/StudySessionPage";
+
+const { sessionId } = Astro.params;
+---
+
+<Layout title="Sesja nauki - FlashCardMemory">
+  <StudySessionPage sessionId={sessionId!} client:load />
+</Layout>
