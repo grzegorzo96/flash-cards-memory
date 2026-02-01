@@ -64,6 +64,27 @@ export type Database = {
         }
         Relationships: []
       }
+      domains: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       flashcards: {
         Row: {
           answer: string
@@ -158,7 +179,7 @@ export type Database = {
           source_text: string
           status: Database["public"]["Enums"]["generation_status"]
           target_language: Database["public"]["Enums"]["language_code"]
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           completed_at?: string | null
@@ -172,7 +193,7 @@ export type Database = {
           source_text: string
           status?: Database["public"]["Enums"]["generation_status"]
           target_language: Database["public"]["Enums"]["language_code"]
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           completed_at?: string | null
@@ -186,7 +207,7 @@ export type Database = {
           source_text?: string
           status?: Database["public"]["Enums"]["generation_status"]
           target_language?: Database["public"]["Enums"]["language_code"]
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: [
           {

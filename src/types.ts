@@ -2,6 +2,7 @@ import type { Enums, Tables } from "./db/database.types";
 
 // Core entities (DB-aligned)
 export type Deck = Tables<"decks">;
+export type Domain = Tables<"domains">;
 export type Flashcard = Tables<"flashcards">;
 export type GenerationRequest = Tables<"generation_requests">;
 export type StudySession = Tables<"study_sessions">;
@@ -57,6 +58,13 @@ export type UpdateDeckCommand = Partial<Pick<Deck, "name" | "description">>;
 export type UpdateDeckResponseDTO = DeckDetailsDTO;
 
 export type DeleteResponseDTO = { ok: true };
+
+// Domains
+export type DomainListItemDTO = Pick<Domain, "id" | "name" | "created_at">;
+export type DomainListResponseDTO = DomainListItemDTO[];
+
+export type CreateDomainCommand = Pick<Domain, "name">;
+export type CreateDomainResponseDTO = Pick<Domain, "id" | "name">;
 
 // Flashcards
 export type FlashcardSortField = "created_at" | "updated_at" | "next_due_at";
