@@ -44,7 +44,9 @@ npm run test:coverage
 │   ├── pages/                # Page Object Models
 │   │   └── LoginPage.ts
 │   ├── fixtures/             # E2E test data
-│   └── example.spec.ts       # Example E2E test
+│   │   └── auth.fixtures.ts
+│   ├── components/           # Component objects
+│   └── logout.spec.ts        # E2E test example
 │
 ├── vitest.config.ts          # Vitest configuration
 ├── playwright.config.ts      # Playwright configuration
