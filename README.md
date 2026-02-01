@@ -61,12 +61,40 @@ FlashCardsMemory is a web application for creating and learning with educational
 npm install
 ```
 
+**Configure environment variables**
+1. Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
+```
+
+2. Fill in the required values:
+- `SUPABASE_URL` - Your Supabase project URL
+- `SUPABASE_KEY` - Your Supabase anon/public key
+- `E2E_USERNAME_ID`, `E2E_USERNAME`, `E2E_PASSWORD` - Test user credentials (for E2E tests)
+
 **Run the app in development**
 ```bash
 npm run dev
 ```
 
 Astro will start the dev server (default: `http://localhost:4321`).
+
+**GitHub Actions CI/CD setup**
+
+To run E2E tests in GitHub Actions, configure the following secrets in your repository:
+
+1. Go to: `Settings` → `Environments` → `integration`
+2. Add the following **Environment secrets**:
+   - `SUPABASE_URL` - Your Supabase project URL
+   - `SUPABASE_PUBLIC_KEY` - Your Supabase anon/public key
+   - `SUPABASE_SECRET_KEY` - (optional, not used in current setup)
+
+3. Add the following **Repository secrets** (Settings → Secrets and variables → Actions):
+   - `E2E_USERNAME_ID` - Test user UUID
+   - `E2E_USERNAME` - Test user email
+   - `E2E_PASSWORD` - Test user password
+
+Note: The workflow automatically creates a `.env.test` file from these secrets before running E2E tests.
 
 ## Available scripts
 From `package.json`:
